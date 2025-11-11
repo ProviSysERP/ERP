@@ -44,7 +44,7 @@
     "watchboy": "^0.4.3"
   },
   "scripts": {
-      "dev": "electronmon .",
+    "dev": "electronmon .",
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -61,5 +61,3 @@
   },
   "homepage": "https://github.com/ProviSysERP/ERP#readme"
 }
-
-

@@ -175,7 +175,8 @@ export default function PrimarySearchAppBar() {
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
+            onClick={() => window.location.href = '/'}
+            sx={{ display: { xs: 'none', sm: 'block' }, cursor: 'pointer', '&:hover': { opacity: 0.8 } }}
           >
             ProviSys
           </Typography>
@@ -237,7 +238,7 @@ export default function PrimarySearchAppBar() {
       {renderMenu}
     </Box>
   );
-  
+
 }
 
 
