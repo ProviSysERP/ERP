@@ -3,12 +3,13 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import { Typography, Container}  from '@mui/material';
+
 
 export default function MediaCard() {
   return (
-    <container>
-         <Card sx={{ position: 'center', maxWidth: 345 }}>
+    <Container sx={{justifyContent: 'center', display: 'flex', paddingTop: 4}}>
+        <Card sx={{ position: 'relative', maxWidth: 345 }}>
       <CardMedia
         sx={{ position: 'relative', height: 140 }}
         image="/static/images/cards/contemplative-reptile.jpg"
@@ -28,6 +29,6 @@ export default function MediaCard() {
         <Button size="small">Learn More</Button>
       </CardActions>
     </Card>
-    </container>
+    </Container>
   );
 }
