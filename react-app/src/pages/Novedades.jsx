@@ -5,6 +5,7 @@ import { Card, CardMedia, Box, Typography, Button, Container } from "@mui/materi
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from 'react-router-dom';
+import "./Novedades.css";
 
 
 const slides = [
@@ -73,13 +74,13 @@ export default function PromoCarousel() {
         const content = s.content ||"";
 
         return (
-          <Box key={i} sx={{ px: 2 }}>
-            <Card sx={{ borderRadius: 3, overflow: "hidden", position: "relative", minHeight: 420 }}>
+          <Box key={i} className="slide-box">
+            <Card className="novedad-card">
               <CardMedia
                 component="img"
                 image={imageUrl}
                 alt={title}
-                sx={{ height: 420, width: "100%", objectFit: "cover", filter: "brightness(0.75)" }}
+                className="novedad-img"
               />
 
               {/* Contenido en overlay */}
@@ -96,13 +97,13 @@ export default function PromoCarousel() {
                   p: 4,
                 }}
               >
-                <Typography variant="h3" component="h2" sx={{ color: "common.white", fontWeight: 700, mb: 1 }}>
+                <Typography variant="h3" component="h2" className="novedad-title">
                   {title}
                 </Typography>
-                <Typography variant="content1" sx={{ color: "common.white", mb: 3 }}>
+                <Typography className="novedad-content">
                   {content}
                 </Typography>
-                <Button variant="contained" size="large" sx={{ width: 220, borderRadius: 8 }}>
+                <Button variant="contained" size="large" className="novedad-button">
                   DESCUBRE MÁS
                 </Button>
               </Box>
