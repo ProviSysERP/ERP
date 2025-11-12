@@ -15,6 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Contactos />} />
           <Route path="/perfil/:id" element={<Perfil />} />
+          <Route path="/novedades" element={<Novedades />} />
         </Routes>
       </Container>
     </Box>
