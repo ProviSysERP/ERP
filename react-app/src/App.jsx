@@ -4,6 +4,7 @@ import Container from '@mui/material/Container'
 import Box from '@mui/material/Box'
 import Header from './components/Header.jsx'
 import Contactos from './pages/Contactos.jsx'
+import Novedades from './components/Novedades.jsx'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -17,8 +18,10 @@ function App() {
           <h1></h1>
         </Box>
       </Container>
-      
+      <Novedades />
     </Box>
+
+
   )
 }
 
