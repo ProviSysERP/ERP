@@ -4,6 +4,7 @@ import Slider from "react-slick";
 import { Card, CardMedia, Box, Typography, Button, Container } from "@mui/material";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { Link } from 'react-router-dom';
 
 
 const slides = [
@@ -66,7 +67,7 @@ export default function PromoCarousel() {
         <Box key={i} sx={{ px: 2 }}>
           <Card sx={{ borderRadius: 3, overflow: "hidden", position: "relative", minHeight: 420 }}>
             <CardMedia
-              component="img"
+              component={image}
               image={s.image}
               alt={s.name}
               sx={{ height: 420, width: "100%", objectFit: "cover", filter: "brightness(0.75)" }}

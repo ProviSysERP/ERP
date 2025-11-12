@@ -5,6 +5,7 @@ import Box from '@mui/material/Box'
 import Header from './components/Header.jsx'
 import Contactos from './pages/Contactos.jsx'
 import Perfil from './pages/Perfil.jsx'
+import Novedades from './components/Novedades.jsx'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Contactos />} />
           <Route path="/perfil/:id" element={<Perfil />} />
+          <Route path="/novedades" element={<Novedades />} />
         </Routes>
       </Container>
     </Box>
