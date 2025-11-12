@@ -1,11 +1,5 @@
-import { useEffect, useState } from "react";   
-import { Link } from 'react-router-dom';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import { Typography, Container, Box, CircularProgress, Alert }  from '@mui/material';
+import { useEffect, useState } from "react";
+import { Typography, Container, Box, CircularProgress, Alert, Button, CardMedia, CardContent, CardActions, Card  }  from '@mui/material';
 
 export default function Novedades() {
   const [users, setUsers] = useState([]);
