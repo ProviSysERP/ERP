@@ -74,7 +74,13 @@ export default function Novedades() {
               </CardContent>
               <CardActions>
                 <Button size="small">Compartir</Button>
-                <Button size="small">Más Info</Button>
+                <Button
+                  size="small"
+                  component={Link}
+                  to={`/perfil/${user.id_user}`}
+                >
+                  Más Info
+                </Button>
               </CardActions>
             </Card>
           ))
