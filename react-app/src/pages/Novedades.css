@@ -1,0 +1,59 @@
+.slick-slider {
+  position: relative;
+}
+
+.slick-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+}
+
+.slide-box {
+  padding: 0 16px;
+}
+
+.novedad-card {
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+  min-height: 420px;
+}
+
+.novedad-img {
+  height: 420px;
+  width: 100%;
+  object-fit: cover;
+  filter: brightness(0.75);
+}
+
+.novedad-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 55%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 32px;
+}
+
+.novedad-title {
+  color: white;
+  font-weight: 700;
+  margin-bottom: 8px;
+  font-size: 2rem;
+}
+
+.novedad-content {
+  color: white;
+  margin-bottom: 24px;
+  font-size: 1.1rem;
+}
+
+.novedad-button {
+  width: 220px;
+  border-radius: 8px;
+}
