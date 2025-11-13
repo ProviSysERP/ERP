@@ -8,6 +8,7 @@ import Perfil from './pages/Perfil.jsx'
 import Novedades from './pages/Novedades.jsx'
 import Proveedores from './pages/Proveedores.jsx'
 import Proveedor from './pages/Proveedor.jsx'
+import Productos from './pages/Productos.jsx'
 
 function App() {
   return (
@@ -15,11 +16,12 @@ function App() {
       <Header />
       <Container maxWidth="lg">
         <Routes>
-          <Route path="/" element={<Contactos />} />
+          <Route path="/" element={<Novedades />} />
           <Route path="/perfil/:id" element={<Perfil />} />
-          <Route path="/novedades" element={<Novedades />} />
+          <Route path="/contactos" element={<Contactos />} />
           <Route path="/proveedores" element={<Proveedores />} />
           <Route path="/proveedor/:id" element={<Proveedor />} />
+          <Route path="/productos" element={<Productos />} />
         </Routes>
       </Container>
     </Box>

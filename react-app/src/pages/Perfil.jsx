@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   Container,
@@ -8,24 +8,41 @@ import {
   CardMedia,
   Button,
   CircularProgress,
-  Alert,
-  Box
+  Alert
 } from "@mui/material";
 
 export default function Perfil() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const eliminarUsuario = async (userId) => {
+    try {
+      const confirmacion = window.confirm("¿Estás seguro de que quieres eliminar este usuario?");
+      if (!confirmacion) return;
+
+      const response = await fetch(`http://localhost:3000/usuarios/${userId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error al eliminar el usuario (HTTP ${response.status})`);
+      }
+
+      alert("Usuario eliminado correctamente ✅");
+      navigate("/");
+    } catch (err) {
+      console.error("Error al eliminar el usuario:", err);
+      alert("Hubo un error al eliminar el usuario.");
+    }
+  };
+
   useEffect(() => {
-    console.log(`Cargando perfil del usuario con ID ${id}...`);
     fetch(`http://localhost:3000/usuarios/${id}`)
       .then((response) => {
-        console.log(response);
-        if (!response.ok) {
-          throw new Error(`Error HTTP: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
         return response.json();
       })
       .then((data) => {
@@ -63,6 +80,15 @@ export default function Perfil() {
         ← Volver
       </Button>
 
+      <Button
+        variant="contained"
+        color="error"
+        sx={{ mb: 3, ml: 2 }}
+        onClick={() => eliminarUsuario(id)}
+      >
+        Eliminar Usuario
+      </Button>
+
       <Card sx={{ maxWidth: 400, mx: "auto", p: 2 }}>
         <CardMedia
           component="img"
@@ -82,7 +108,9 @@ export default function Perfil() {
             <strong>Email:</strong> {user.email}
           </Typography>
           <Typography variant="body1" sx={{ color: "text.secondary" }}>
-            {user.provider ? "Este usuario pertenece a una proveedora." : "No es de una empresa proveedora."}
+            {user.provider
+              ? "Este usuario pertenece a una proveedora."
+              : "No es de una empresa proveedora."}
           </Typography>
         </CardContent>
       </Card>

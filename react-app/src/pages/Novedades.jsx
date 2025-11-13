@@ -5,6 +5,7 @@ import { Card, CardMedia, Box, Typography, Button } from "@mui/material";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./Novedades.css";
+import { Link } from 'react-router-dom';
 
 const slides = [
   {
@@ -118,6 +119,8 @@ export default function PromoCarousel() {
                       <Button
                         variant="contained"
                         size="large"
+                        component={Link}
+                        to={`/productos/${products.id_product}`}
                         sx={{
                           position: 'absolute',
                           bottom: 24,
