@@ -7,13 +7,7 @@ import "slick-carousel/slick/slick-theme.css";
 import "./Novedades.css";
 import { Link } from 'react-router-dom';
 
-const slides = [
-  {
-    title: "Refresca tu espíritu navideño con Coca-Cola",
-    content: "Participa y podrás ganar una experiencia mágica",
-    image: "/path/to/your-image.jpg",
-  },
-];
+const slides = [];
 
 export default function PromoCarousel() {
   const [products, setProducts] = useState([]);
