@@ -6,6 +6,8 @@ import Header from './components/Header.jsx'
 import Contactos from './pages/Contactos.jsx'
 import Perfil from './pages/Perfil.jsx'
 import Novedades from './pages/Novedades.jsx'
+import Proveedores from './pages/Proveedores.jsx'
+import Proveedor from './pages/Proveedor.jsx'
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
           <Route path="/" element={<Contactos />} />
           <Route path="/perfil/:id" element={<Perfil />} />
           <Route path="/novedades" element={<Novedades />} />
+          <Route path="/proveedores" element={<Proveedores />} />
+          <Route path="/proveedor/:id" element={<Proveedor />} />
         </Routes>
       </Container>
     </Box>
