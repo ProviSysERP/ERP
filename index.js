@@ -16,18 +16,24 @@ const createWindow = () => {
 
     const templateDefault = [
      {
-      label: 'File',
+      label: 'Explorar',
       submenu: [
         {
           label: 'Menu',
           click: () => {
-            win.loadFile('menu.html');
+            win.loadURL('http://localhost:5173/');
           },
         },
         {
-          label: 'Pedidos',
+          label: 'Proveedores',
           click: () => {
-            win.loadFile('pedidos.html');
+            win.loadURL('http://localhost:5173/proveedores');
+          },
+        },
+        {
+          label: 'Contactos',
+          click: () => {
+            win.loadURL('http://localhost:5173/contactos');
           },
         },
         { type: 'separator' },
@@ -72,15 +78,15 @@ const createWindow = () => {
     },
   ];
 
-    const menu = Menu.buildFromTemplate(template);
-    Menu.setApplicationMenu(menu);
-
   let template;
   if (process.platform === 'darwin') {
     template = templateMac;
   } else {
     template = templateDefault;
   }
+
+    const menu = Menu.buildFromTemplate(template);
+    Menu.setApplicationMenu(menu);
 };
 
 app.whenReady().then(() => {
