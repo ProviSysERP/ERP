@@ -32,7 +32,7 @@ export default function Perfil() {
       }
 
       alert("Usuario eliminado correctamente ✅");
-      navigate("/");
+      navigate("/contactos");
     } catch (err) {
       console.error("Error al eliminar el usuario:", err);
       alert("Hubo un error al eliminar el usuario.");
