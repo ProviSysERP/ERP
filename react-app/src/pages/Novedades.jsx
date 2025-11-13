@@ -35,7 +35,7 @@ export default function PromoCarousel() {
   }, []);
 
   const settings = {
-    dots: false,            // <-- eliminamos los dots (puntos)
+    dots: true,            
     arrows: false,
     infinite: true,
     speed: 600,
@@ -50,15 +50,14 @@ export default function PromoCarousel() {
   const data = products && products.length ? products : slides;
 
   return (
-    /* Contenedor que coloca el slider en la parte superior y centrado horizontalmente */
     <Box
       sx={{
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',     // centra horizontalmente
-        justifyContent: 'flex-start', // arriba
-        pt: 6, // separacion superior (puedes ajustar)
+        alignItems: 'center',     
+        justifyContent: 'flex-start',
+        pt: 6, 
         bgcolor: '#f5f7fa',
       }}
     >
