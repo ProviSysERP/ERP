@@ -9,11 +9,7 @@ import "./Novedades.css";
 
 
 const slides = [
-  { 
-    title: "Refresca tu espíritu navideño con Coca-Cola",
-    content: "Participa y podrás ganar una experiencia mágica",
-    image: "/path/to/your-image.jpg"
-  },
+
 ];
 
 export default function PromoCarousel() {
@@ -23,7 +19,7 @@ export default function PromoCarousel() {
     const [isLoading, setIsLoading] = useState(true);
   
     useEffect(() => {
-      console.log("Cargando productos...");
+      console.log("Cargando posts...");
       setIsLoading(true);
   
       fetch("http://localhost:3000/posts")
@@ -40,7 +36,7 @@ export default function PromoCarousel() {
           setError(null);
         })
         .catch((error) => {
-          console.error("Error al cargar productos:", error);
+          console.error("Error al cargar posts:", error);
           setError(error.message);
         })
         .finally(() => {
@@ -75,26 +71,25 @@ export default function PromoCarousel() {
 
         return (
           <Box key={i} className="slide-box">
-            <Card className="novedad-card">
+            <Card className="novedad-card" sx={{ display: 'flex', alignItems: 'stretch' }}>
+              {/* Imagen a la izquierda */}
               <CardMedia
                 component="img"
                 image={imageUrl}
                 alt={title}
                 className="novedad-img"
+                sx={{ width: { xs: '40%', sm: '45%', md: '50%' }, minWidth: 180, objectFit: 'cover' }}
               />
 
-              {/* Contenido en overlay */}
+              {/* Contenido a la derecha */}
               <Box
                 sx={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  height: "100%",
-                  width: "55%",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  p: 4,
+                  width: { xs: '60%', sm: '55%', md: '50%' },
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  p: { xs: 2, sm: 4 },
+                  gap: 2,
                 }}
               >
                 <Typography variant="h3" component="h2" className="novedad-title">
@@ -103,9 +98,11 @@ export default function PromoCarousel() {
                 <Typography className="novedad-content">
                   {content}
                 </Typography>
-                <Button variant="contained" size="large" className="novedad-button">
-                  DESCUBRE MÁS
-                </Button>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                  <Button variant="contained" size="large" className="novedad-button">
+                    DESCUBRE MÁS
+                  </Button>
+                </Box>
               </Box>
             </Card>
           </Box>
