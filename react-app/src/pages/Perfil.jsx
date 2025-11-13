@@ -1,15 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {
-  Container,
-  Typography,
-  Card,
-  CardContent,
-  CardMedia,
-  Button,
-  CircularProgress,
-  Alert
-} from "@mui/material";
+import {Container,Typography,Card,CardContent,CardMedia,Button,CircularProgress,Alert} from "@mui/material";
 
 export default function Perfil() {
   const { id } = useParams();
@@ -89,15 +80,20 @@ export default function Perfil() {
         Eliminar Usuario
       </Button>
 
-      <Card sx={{ maxWidth: 400, mx: "auto", p: 2 }}>
+      <Card sx={{ maxWidth: 400, mx: "auto", p: 2, display: "flex", flexDirection: "column", alignItems: "center" }}>
         <CardMedia
           component="img"
-          height="200"
           image={user.profile_picture || "https://via.placeholder.com/200"}
           alt={user.name}
-          sx={{ borderRadius: 2 }}
+          sx={{
+            width: 200,
+            height: 200,
+            borderRadius: "50%",
+            objectFit: "cover",
+            mb: 2
+          }}
         />
-        <CardContent>
+        <CardContent sx={{ width: "100%", textAlign: "center" }}>
           <Typography variant="h5" sx={{ fontWeight: "bold", mb: 1 }}>
             {user.name}
           </Typography>

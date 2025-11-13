@@ -58,7 +58,7 @@ export default function Novedades() {
           users.map((user) => (
             <Card key={user.id_user} sx={{ maxWidth: 345 }}>
               <CardMedia
-                sx={{ height: 140 }}
+                sx={{ height: 200 }}
                 image={user.profile_picture}
                 title={user.name}
               />
