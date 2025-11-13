@@ -1,5 +1,3 @@
-function Producto() {
-
+export default function Producto(){
+    
 }
-
-export default Producto
