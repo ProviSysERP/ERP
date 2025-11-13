@@ -9,6 +9,7 @@ import Novedades from './pages/Novedades.jsx'
 import Proveedores from './pages/Proveedores.jsx'
 import Proveedor from './pages/Proveedor.jsx'
 import Productos from './pages/Productos.jsx'
+import Producto from './pages/Producto.jsx'
 
 function App() {
   return (
