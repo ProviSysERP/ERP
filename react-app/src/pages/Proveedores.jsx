@@ -49,7 +49,7 @@ export default function Proveedores() {
 
   return (
     <Container sx={{ py: 4 }}>
-      <Typography variant="h4" sx={{ mb: 4, fontWeight: "bold" }}>
+      <Typography variant="h4" sx={{ mb: 4, fontWeight: "bold", textAlign: "center" }}>
         Catálogo de Proveedores
       </Typography>
       <Box sx={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: 3 }}>
@@ -62,7 +62,9 @@ export default function Proveedores() {
                 title={p.companyName}
               />
               <CardContent>
-                <Typography variant="h6" sx={{ textAlign: "center" }}>{p.companyName}</Typography>
+                <Typography variant="h5" sx={{ textAlign: "center", fontWeight: "bold" }}>
+                  {p.companyName}
+                </Typography>
                 <Box
                   sx={{
                     display: "flex",
@@ -74,7 +76,13 @@ export default function Proveedores() {
                 >
                   {Array.isArray(p.categories) &&
                     p.categories.map((cat, i) => (
-                      <Chip key={i} label={cat} size="small" color="primary" />
+                      <Chip
+                        key={i}
+                        label={cat}
+                        size="small"
+                        color="primary"
+                        sx={{ textTransform: "capitalize", fontSize: "1rem" }}
+                      />
                     ))}
                 </Box>
               </CardContent>
