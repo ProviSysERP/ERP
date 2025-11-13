@@ -82,7 +82,7 @@ export default function Perfil() {
             <strong>Email:</strong> {user.email}
           </Typography>
           <Typography variant="body1" sx={{ color: "text.secondary" }}>
-            {user.provider || "No es de una empresa proveedora."}
+            {user.provider ? "Este usuario pertenece a una proveedora." : "No es de una empresa proveedora."}
           </Typography>
         </CardContent>
       </Card>
