@@ -55,10 +55,10 @@ export default function Proveedores() {
       <Box sx={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: 3 }}>
         {proveedores.length > 0 ? (
           proveedores.map((p) => (
-            <Card key={p.id_provider}>
+            <Card key={p.id_provider} sx={{ maxWidth: 350 }}>
               <CardMedia
-                sx={{ height: 140 }}
-                image={p.image || "https://via.placeholder.com/300x140?text=Proveedor"}
+                sx={{ height: 200 }}
+                image={p.image || "https://via.placeholder.com/350x200?text=Proveedor"}
                 title={p.companyName}
               />
               <CardContent>

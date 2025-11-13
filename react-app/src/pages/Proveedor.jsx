@@ -10,7 +10,7 @@ import {
   CircularProgress,
   Alert,
   Box,
-  Chip,
+  Chip
 } from "@mui/material";
 
 export default function Proveedor() {
@@ -57,31 +57,45 @@ export default function Proveedor() {
 
   return (
     <Container sx={{ py: 4 }}>
-      <Button
-        component={Link}
-        to="/proveedores"
-        variant="outlined"
-        sx={{ mb: 3 }}
-      >
+      <Button component={Link} to="/proveedores" variant="outlined" sx={{ mb: 3 }}>
         ← Volver al catálogo
       </Button>
 
-      <Card sx={{ maxWidth: 600, mx: "auto", p: 2 }}>
+      <Card sx={{ maxWidth: 600, mx: "auto", p: 2, display: "flex", flexDirection: "column", alignItems: "center" }}>
         <CardMedia
           component="img"
-          height="200"
-          image={proveedor.image || "https://via.placeholder.com/400x200"}
+          image={proveedor.image || "https://via.placeholder.com/200"}
           alt={proveedor.companyName}
-          sx={{ borderRadius: 2 }}
+          sx={{
+            width: 200,
+            height: 200,
+            borderRadius: "50%",
+            objectFit: "cover",
+            mb: 2
+          }}
         />
-        <CardContent>
-          <Typography variant="h5" sx={{ fontWeight: "bold", mb: 1 }}>
+        <CardContent sx={{ width: "100%", textAlign: "center" }}>
+          <Typography variant="h4" sx={{ fontWeight: "bold", mb: 1 }}>
             {proveedor.companyName}
           </Typography>
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, mb: 2 }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              flexWrap: "wrap",
+              gap: 0.5,
+              mb: 2
+            }}
+          >
             {Array.isArray(proveedor.categories) &&
               proveedor.categories.map((cat, i) => (
-                <Chip key={i} label={cat} size="small" color="primary" />
+                <Chip
+                  key={i}
+                  label={cat}
+                  size="small"
+                  color="primary"
+                  sx={{ textTransform: "capitalize", fontSize: "1rem" }}
+                />
               ))}
           </Box>
           <Typography variant="body1" sx={{ mb: 2, whiteSpace: "pre-wrap" }}>
