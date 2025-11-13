@@ -10,7 +10,7 @@ import {
   Card,
   CardContent,
   CardMedia,
-  Chip
+  Chip,
 } from "@mui/material";
 
 export default function Proveedores() {
@@ -52,23 +52,38 @@ export default function Proveedores() {
       <Typography variant="h4" sx={{ mb: 4, fontWeight: "bold" }}>
         Catálogo de Proveedores
       </Typography>
-      <Box sx={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: 3 }}>
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))",
+          gap: 3,
+        }}
+      >
         {proveedores.length > 0 ? (
           proveedores.map((p) => (
             <Card key={p.id_provider}>
               <CardMedia
                 sx={{ height: 140 }}
-                image={p.image || "https://via.placeholder.com/300x140?text=Proveedor"}
+                image={
+                  p.image ||
+                  "https://via.placeholder.com/300x140?text=Proveedor"
+                }
                 title={p.companyName}
               />
               <CardContent>
                 <Typography variant="h6">{p.companyName}</Typography>
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, my: 1 }}>
+                <Box
+                  sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, my: 1 }}
+                >
                   {Array.isArray(p.categories) &&
-                    p.categories.map((cat, i) => <Chip key={i} label={cat} size="small" color="primary" />)}
+                    p.categories.map((cat, i) => (
+                      <Chip key={i} label={cat} size="small" color="primary" />
+                    ))}
                 </Box>
                 <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  {p.description ? p.description.slice(0, 80) + "…" : "Sin descripción."}
+                  {p.description
+                    ? p.description.slice(0, 80) + "…"
+                    : "Sin descripción."}
                 </Typography>
               </CardContent>
               <Box sx={{ p: 2, pt: 0 }}>

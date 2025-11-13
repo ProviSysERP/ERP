@@ -10,7 +10,7 @@ import {
   CircularProgress,
   Alert,
   Box,
-  Chip
+  Chip,
 } from "@mui/material";
 
 export default function Proveedor() {
@@ -57,7 +57,12 @@ export default function Proveedor() {
 
   return (
     <Container sx={{ py: 4 }}>
-      <Button component={Link} to="/proveedores" variant="outlined" sx={{ mb: 3 }}>
+      <Button
+        component={Link}
+        to="/proveedores"
+        variant="outlined"
+        sx={{ mb: 3 }}
+      >
         ← Volver al catálogo
       </Button>
 
@@ -75,7 +80,9 @@ export default function Proveedor() {
           </Typography>
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, mb: 2 }}>
             {Array.isArray(proveedor.categories) &&
-              proveedor.categories.map((cat, i) => <Chip key={i} label={cat} size="small" color="primary" />)}
+              proveedor.categories.map((cat, i) => (
+                <Chip key={i} label={cat} size="small" color="primary" />
+              ))}
           </Box>
           <Typography variant="body1" sx={{ mb: 2, whiteSpace: "pre-wrap" }}>
             {proveedor.description || "Sin descripción disponible."}
