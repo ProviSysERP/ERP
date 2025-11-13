@@ -69,6 +69,7 @@ export default function PromoCarousel() {
               const imageUrl = (s.images && s.images.length && s.images[0]) || s.image || '/placeholder.jpg';
               const title = s.title || '';
               const content = s.content || '';
+              const id_product = s.id_product;
 
               return (
                 <Box key={i} sx={{ display: 'flex', justifyContent: 'center', px: 2 }}>
@@ -120,7 +121,7 @@ export default function PromoCarousel() {
                         variant="contained"
                         size="large"
                         component={Link}
-                        to={`/productos/${products.id_product}`}
+                        to={`/producto/${id_product}`}
                         sx={{
                           position: 'absolute',
                           bottom: 24,
