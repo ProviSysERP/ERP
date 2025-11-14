@@ -1,10 +1,18 @@
-.proveedores-container {
+.proveedores-layout {
+  display: flex;
+  gap: 2rem;
   padding: 2rem;
 }
 
-.proveedores-title {
-  margin-bottom: 1.5rem;
-  font-weight: bold;
+.proveedores-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 20px;
+}
+
+.proveedores-resultados {
+  flex-grow: 1;
 }
 
 .proveedores-grid {
@@ -21,8 +29,4 @@
 
 .proveedor-btn {
   margin-top: auto;
-}
-
-.proveedores-tabs {
-  margin-bottom: 1.5rem;
 }
