@@ -8,6 +8,9 @@ import Perfil from './pages/Perfil.jsx'
 import Novedades from './pages/Novedades.jsx'
 import Proveedores from './pages/Proveedores.jsx'
 import Proveedor from './pages/Proveedor.jsx'
+import Login from './pages/Login.jsx'
+import Register from './pages/Register.jsx'
+import ProtectedRoute from './components/ProtectedRoute.jsx'
 import Productos from './pages/Productos.jsx'
 import Producto from './pages/Producto.jsx'
 import Pedidos from './pages/Pedidos.jsx'
@@ -20,21 +23,102 @@ function App() {
       <Header />
       <Container>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/perfil/:id" element={<Perfil />} />
-          <Route path="/contactos" element={<Contactos />} />
-          <Route path="/proveedores" element={<Proveedores />} />
-          <Route path="/proveedor/:id" element={<Proveedor />} />
-          <Route path="/productos" element={<Productos />} />
-          <Route path="/producto/:id" element={<Producto />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/cartaproveedores" element={<CartaProveedores />} />
-          <Route path="/pedidos" element={<Pedidos />} />
+          {/* Rutas públicas */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/registrar" element={<Register />} />
+
+          {/* Rutas protegidas */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Contactos />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/perfil/:id"
+            element={
+              <ProtectedRoute>
+                <Perfil />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/novedades"
+            element={
+              <ProtectedRoute>
+                <Novedades />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/proveedores"
+            element={
+              <ProtectedRoute>
+                <Proveedores />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/proveedor/:id"
+            element={
+              <ProtectedRoute>
+                <Proveedor />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/contactos"
+            element={
+              <ProtectedRoute>
+                <Contactos />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/productos"
+            element={
+              <ProtectedRoute>
+                <Productos />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/producto/:id"
+            element={
+              <ProtectedRoute>
+                <Producto />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cartaproveedores"
+            element={
+              <ProtectedRoute>
+                <CartaProveedores />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/pedidos"
+            element={
+              <ProtectedRoute>
+                <Pedidos />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </Container>
     </Box>
-
-
   )
 }
 
