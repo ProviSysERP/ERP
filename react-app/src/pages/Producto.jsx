@@ -139,6 +139,18 @@ return (
         overflow: "hidden",
         boxShadow: "0 12px 40px rgba(3,18,26,0.08)",
         height: { xs: "auto", md: 450 },
+        position: "relative",
+        ".slick-prev, .slick-next": {
+          zIndex: 10,
+          width: "40px",
+          height: "40px",
+        },
+        ".slick-prev": {
+          left: "10px",
+        },
+        ".slick-next": {
+          right: "10px",
+        },
       }}
     >
       <Box
@@ -156,11 +168,12 @@ return (
                 image={resolveImage(img)}
                 alt={product.name}
                 sx={{
-                  width: "95%",
+                  width: "100%",
                   alignContent: "center",
                   alignItems: "center",
-                  height: "90%",
+                  height: "100%",
                   objectFit: "fill",
+                  borderRadius:"10px"
                 }}
               />
             </Box>
