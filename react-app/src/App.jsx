@@ -25,7 +25,7 @@ function App() {
           <Route path="/proveedor/:id" element={<Proveedor />} />
           <Route path="/productos" element={<Productos />} />
           <Route path="/producto/:id" element={<Producto />} />
-          <Route path="/pedidos" element={<Pedidos/>} />
+          <Route path="/pedidos" element={<Pedidos />} />
         </Routes>
       </Container>
     </Box>
