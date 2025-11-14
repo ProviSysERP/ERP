@@ -20,7 +20,7 @@ function App() {
       <Header />
       <Container>
         <Routes>
-          <Route path="/" element={<Novedades />} />
+          <Route path="/" element={<Home />} />
           <Route path="/perfil/:id" element={<Perfil />} />
           <Route path="/contactos" element={<Contactos />} />
           <Route path="/proveedores" element={<Proveedores />} />
