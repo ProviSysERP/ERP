@@ -85,7 +85,7 @@ export default function Productos() {
                 </Card>
             ))
             ) : (
-            <Alert severity="info">No hay usuarios disponibles</Alert>
+            <Alert severity="info">No hay productos disponibles</Alert>
             )}
         </Box>
         </Container>

@@ -11,12 +11,14 @@ import Proveedor from './pages/Proveedor.jsx'
 import Productos from './pages/Productos.jsx'
 import Producto from './pages/Producto.jsx'
 import Pedidos from './pages/Pedidos.jsx'
+import Home from './pages/Home.jsx'
+import CartaProveedores from './components/CartaProveedores.jsx'
 
 function App() {
   return (
     <Box sx={{ width: '100%', minHeight: '100vh' }}>
       <Header />
-      <Container maxWidth="lg">
+      <Container>
         <Routes>
           <Route path="/" element={<Novedades />} />
           <Route path="/perfil/:id" element={<Perfil />} />
@@ -25,6 +27,8 @@ function App() {
           <Route path="/proveedor/:id" element={<Proveedor />} />
           <Route path="/productos" element={<Productos />} />
           <Route path="/producto/:id" element={<Producto />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/cartaproveedores" element={<CartaProveedores />} />
         </Routes>
       </Container>
     </Box>
