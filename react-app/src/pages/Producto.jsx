@@ -13,6 +13,9 @@ import {
   Chip,
   Stack,
 } from "@mui/material";
+import Slider from 'react-slick';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 export default function Producto() {
   const { id } = useParams();
@@ -31,6 +34,19 @@ export default function Producto() {
     if (trimmed.startsWith("http") || trimmed.startsWith("data:")) return trimmed;
     if (trimmed.startsWith("/")) return `${BASE_URL}${trimmed}`;
     return `${BASE_URL}/${trimmed}`;
+  };
+
+  const settings = {
+    dots: true,
+    arrows: true,
+    infinite: true,
+    speed: 600,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 8500,
+    pauseOnHover: true,
+    adaptiveHeight: true,
   };
 
   useEffect(() => {
@@ -97,7 +113,7 @@ export default function Producto() {
   if (!product) {
     return (
       <Container sx={{ py: 6 }}>
-        <Alert severity="info">Producto no disponible</Alert>
+        <Alert severity="info">Producto no disponible o no existente.</Alert>
         <Box sx={{ mt: 2 }}>
           <Button component={RouterLink} to="/productos" variant="outlined">
             Volver a Productos
@@ -113,73 +129,87 @@ export default function Producto() {
     product.profile_picture ||
     "";
 
-  return (
-    <Container sx={{ py: { xs: 3, md: 6 } }}>
-      <Card
+return (
+  <Container sx={{ py: { xs: 3, md: 6 } }}>
+    <Card
+      sx={{
+        display: "flex",
+        flexDirection: { xs: "column", md: "row" },
+        borderRadius: 3,
+        overflow: "hidden",
+        boxShadow: "0 12px 40px rgba(3,18,26,0.08)",
+        height: { xs: "auto", md: 450 },
+      }}
+    >
+      <Box
         sx={{
-          display: "flex",
-          flexDirection: { xs: "column", md: "row" },
-          borderRadius: 3,
+          width: { xs: "100%", md: "48%" },
+          height: "100%",
           overflow: "hidden",
-          boxShadow: "0 12px 40px rgba(3,18,26,0.08)",
         }}
       >
-        <Box sx={{ flex: { xs: "none", md: "0 0 48%" }, width: "100%" }}>
-          <CardMedia
-            component="img"
-            image={resolveImage(imageUrl)}
-            alt={product.name || "producto"}
-            sx={{ width: "100%", height: { xs: 320, md: "100%" }, objectFit: "cover" }}
-            onError={(e) => {
-              e.currentTarget.onerror = null;
-              e.currentTarget.src = PLACEHOLDER;
-            }}
-          />
+        <Slider {...settings}>
+          {product.images?.map((img, index) => (
+            <Box key={index} sx={{ height: "100%" }}>
+              <CardMedia
+                component="img"
+                image={resolveImage(img)}
+                alt={product.name}
+                sx={{
+                  width: "95%",
+                  alignContent: "center",
+                  alignItems: "center",
+                  height: "90%",
+                  objectFit: "fill",
+                }}
+              />
+            </Box>
+          ))}
+        </Slider>
+      </Box>
+
+      <CardContent
+        sx={{
+          flex: 1,
+          p: { xs: 3, md: 5 },
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          justifyContent: "space-between",
+        }}
+      >
+        <Box>
+          <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 1 }}>
+            <Chip label={`ID: ${product.id_product ?? product.id ?? product._id ?? "-"}`} />
+            {product.category && <Chip label={product.category} color="primary" />}
+          </Stack>
+
+          <Typography variant="h4" sx={{ fontWeight: 800, mb: 1 }}>
+            {product.name}
+          </Typography>
+
+          <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 2 }}>
+            {product.subtitle || product.short_description || ""}
+          </Typography>
+
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            {product.description || "Sin descripción disponible."}
+          </Typography>
+
+          <Typography variant="h6" sx={{ fontWeight: 700, color: "secondary.main" }}>
+            {product.price != null ? `€ ${product.price}` : "Precio no disponible"}
+          </Typography>
         </Box>
 
-        <CardContent
-          sx={{
-            flex: 1,
-            p: { xs: 3, md: 5 },
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-            justifyContent: "space-between",
-          }}
-        >
-          <Box>
-            <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 1 }}>
-              <Chip label={`ID: ${product.id_product ?? product.id ?? product._id ?? "-"}`} />
-              {product.category && <Chip label={product.category} color="primary" />}
-            </Stack>
+        <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+          <Button variant="contained" size="large">Añadir al carrito</Button>
+          <Button component={RouterLink} to="/" variant="outlined">
+            Volver
+          </Button>
+        </Box>
+      </CardContent>
+    </Card>
+  </Container>
+);
 
-            <Typography variant="h4" component="h1" sx={{ fontWeight: 800, mb: 1 }}>
-              {product.name}
-            </Typography>
-
-            <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 2 }}>
-              {product.subtitle || product.short_description || ""}
-            </Typography>
-
-            <Typography variant="body1" sx={{ color: "text.primary", mb: 2 }}>
-              {product.description || "Sin descripción disponible."}
-            </Typography>
-
-            <Typography variant="h6" sx={{ fontWeight: 700, color: "secondary.main", mb: 1 }}>
-              {product.price != null ? `€ ${product.price}` : "Precio no disponible"}
-            </Typography>
-          </Box>
-
-          <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
-            <Button variant="contained" size="large">
-              Añadir al carrito
-            </Button>
-            <Button component={RouterLink} to="/" variant="outlined">
-              Volver
-            </Button>
-          </Box>
-        </CardContent>
-      </Card>
-    </Container>
-  );
 }
