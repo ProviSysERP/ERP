@@ -1,17 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {
-  Container,
-  Typography,
-  Card,
-  CardContent,
-  CardMedia,
-  Button,
-  CircularProgress,
-  Alert,
-  Box,
-  Chip
-} from "@mui/material";
+import {Container,Typography,Card,CardContent,CardMedia,Button,CircularProgress,Alert,Box,Chip} from "@mui/material";
 
 export default function Proveedor() {
   const { id } = useParams();
