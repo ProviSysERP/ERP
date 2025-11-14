@@ -5,25 +5,28 @@
 }
 
 .proveedores-sidebar {
-  width: 280px;
-  display: flex;
-  flex-direction: column;
-}
-
-.proveedores-lista {
-  max-height: 300px;
-  overflow-y: auto;
-  margin-top: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  width: 260px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 20px;
 }
 
 .proveedores-resultados {
-  flex: 1;
+  flex-grow: 1;
 }
 
-.categorias-box {
+.proveedores-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.proveedor-card {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
+  flex-direction: column;
+  max-width: 345px;
+}
+
+.proveedor-btn {
+  margin-top: auto;
 }

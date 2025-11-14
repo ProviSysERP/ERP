@@ -58,7 +58,7 @@ export default function Productos() {
                 <Card key={product.id_product} sx={{ maxWidth: 345 }}>
                 <CardMedia
                     sx={{ height: 140 }}
-                    images={product.images}
+                    image={(product.images && product.images.length && product.images[0]) || product.image || '/placeholder.jpg'}
                     title={product.name}
                 />
                 <CardContent>
