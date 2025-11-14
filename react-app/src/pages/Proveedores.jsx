@@ -1,21 +1,19 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../pages/Proveedores.css";
-import { Container, Typography, Box, CircularProgress, Alert, Button, Card, CardContent, CardMedia, Chip, TextField } from "@mui/material";
+import { Container, Typography, Box, CircularProgress, Alert, Button, Card, CardContent, CardMedia, Chip, TextField, List, ListItem, ListItemButton } from "@mui/material";
 
 export default function Proveedores() {
   const [proveedores, setProveedores] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [busqueda, setBusqueda] = useState("");
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
 
   useEffect(() => {
     setIsLoading(true);
     fetch("http://localhost:3000/proveedores")
-      .then((res) => {
-        if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         setProveedores(data);
         setError(null);
@@ -24,9 +22,14 @@ export default function Proveedores() {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const proveedoresFiltrados = proveedores.filter((p) =>
-    p.companyName.toLowerCase().includes(busqueda.toLowerCase())
-  );
+  const proveedoresFiltrados = proveedores.filter((p) => {
+    const nombreCoincide = p.companyName.toLowerCase().includes(busqueda.toLowerCase());
+    const categoriaCoincide =
+      categoriaSeleccionada === "" ||
+      p.categories.some((cat) => cat.toLowerCase() === categoriaSeleccionada.toLowerCase());
+
+    return nombreCoincide && categoriaCoincide;
+  });
 
   if (isLoading)
     return (
@@ -58,6 +61,27 @@ export default function Proveedores() {
             onChange={(e) => setBusqueda(e.target.value)}
             sx={{ mb: 3 }}
           />
+
+          <Typography variant="h6" sx={{ mb: 1 }}>
+            Categorías
+          </Typography>
+
+          <List>
+            {["Alimento", "Bebida", "Otros"].map((cat) => (
+              <ListItem key={cat} disablePadding>
+                <ListItemButton
+                  selected={categoriaSeleccionada === cat.toLowerCase()}
+                  onClick={() =>
+                    setCategoriaSeleccionada(
+                      categoriaSeleccionada === cat.toLowerCase() ? "" : cat.toLowerCase()
+                    )
+                  }
+                >
+                  {cat}
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
         </Box>
 
         {/*Panel de la derecha*/}
