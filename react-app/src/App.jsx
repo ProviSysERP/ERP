@@ -10,6 +10,7 @@ import Proveedores from './pages/Proveedores.jsx'
 import Proveedor from './pages/Proveedor.jsx'
 import Productos from './pages/Productos.jsx'
 import Producto from './pages/Producto.jsx'
+import Pedidos from './pages/Pedidos.jsx'
 
 function App() {
   return (
