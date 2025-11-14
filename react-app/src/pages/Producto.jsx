@@ -46,7 +46,7 @@ export default function Producto() {
     autoplay: true,
     autoplaySpeed: 8500,
     pauseOnHover: true,
-    adaptiveHeight: true,
+    adaptiveHeight: false,
   };
 
   useEffect(() => {
