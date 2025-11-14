@@ -8,6 +8,9 @@ import Perfil from './pages/Perfil.jsx'
 import Novedades from './pages/Novedades.jsx'
 import Proveedores from './pages/Proveedores.jsx'
 import Proveedor from './pages/Proveedor.jsx'
+import Login from './pages/Login.jsx'
+import Register from './pages/Register.jsx'
+import ProtectedRoute from './components/ProtectedRoute.jsx'
 
 function App() {
   return (
@@ -15,16 +18,54 @@ function App() {
       <Header />
       <Container maxWidth="lg">
         <Routes>
-          <Route path="/" element={<Contactos />} />
-          <Route path="/perfil/:id" element={<Perfil />} />
-          <Route path="/novedades" element={<Novedades />} />
-          <Route path="/proveedores" element={<Proveedores />} />
-          <Route path="/proveedor/:id" element={<Proveedor />} />
+          {/* Rutas públicas */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/registrar" element={<Register />} />
+
+          {/* Rutas protegidas */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Contactos />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/perfil/:id"
+            element={
+              <ProtectedRoute>
+                <Perfil />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/novedades"
+            element={
+              <ProtectedRoute>
+                <Novedades />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/proveedores"
+            element={
+              <ProtectedRoute>
+                <Proveedores />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/proveedor/:id"
+            element={
+              <ProtectedRoute>
+                <Proveedor />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </Container>
     </Box>
-
-
   )
 }
 
