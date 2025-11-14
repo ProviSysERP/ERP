@@ -1,0 +1,29 @@
+.proveedores-layout {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.proveedores-sidebar {
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+}
+
+.proveedores-lista {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.proveedores-resultados {
+  flex: 1;
+}
+
+.categorias-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}

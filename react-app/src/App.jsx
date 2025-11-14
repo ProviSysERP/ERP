@@ -11,12 +11,17 @@ import Proveedor from './pages/Proveedor.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
+import Productos from './pages/Productos.jsx'
+import Producto from './pages/Producto.jsx'
+import Pedidos from './pages/Pedidos.jsx'
+import Home from './pages/Home.jsx'
+import CartaProveedores from './components/CartaProveedores.jsx'
 
 function App() {
   return (
     <Box sx={{ width: '100%', minHeight: '100vh' }}>
       <Header />
-      <Container maxWidth="lg">
+      <Container>
         <Routes>
           {/* Rutas públicas */}
           <Route path="/login" element={<Login />} />
@@ -60,6 +65,54 @@ function App() {
             element={
               <ProtectedRoute>
                 <Proveedor />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/contactos"
+            element={
+              <ProtectedRoute>
+                <Contactos />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/productos"
+            element={
+              <ProtectedRoute>
+                <Productos />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/producto/:id"
+            element={
+              <ProtectedRoute>
+                <Producto />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cartaproveedores"
+            element={
+              <ProtectedRoute>
+                <CartaProveedores />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/pedidos"
+            element={
+              <ProtectedRoute>
+                <Pedidos />
               </ProtectedRoute>
             }
           />

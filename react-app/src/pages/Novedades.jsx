@@ -5,14 +5,9 @@ import { Card, CardMedia, Box, Typography, Button } from "@mui/material";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./Novedades.css";
+import { Link } from 'react-router-dom';
 
-const slides = [
-  {
-    title: "Refresca tu espíritu navideño con Coca-Cola",
-    content: "Participa y podrás ganar una experiencia mágica",
-    image: "/path/to/your-image.jpg",
-  },
-];
+const slides = [];
 
 export default function PromoCarousel() {
   const [products, setProducts] = useState([]);
@@ -35,7 +30,7 @@ export default function PromoCarousel() {
   }, []);
 
   const settings = {
-    dots: true,            
+    dots: false,            
     arrows: false,
     infinite: true,
     speed: 600,
@@ -68,6 +63,7 @@ export default function PromoCarousel() {
               const imageUrl = (s.images && s.images.length && s.images[0]) || s.image || '/placeholder.jpg';
               const title = s.title || '';
               const content = s.content || '';
+              const id_product = s.id_product;
 
               return (
                 <Box key={i} sx={{ display: 'flex', justifyContent: 'center', px: 2 }}>
@@ -118,6 +114,8 @@ export default function PromoCarousel() {
                       <Button
                         variant="contained"
                         size="large"
+                        component={Link}
+                        to={`/producto/${id_product}`}
                         sx={{
                           position: 'absolute',
                           bottom: 24,
