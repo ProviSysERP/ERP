@@ -1,121 +1,106 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "../pages/Proveedores.css";
-import { Box, Typography, Card, CardContent, CardActions, Button, TextField, List, ListItem, ListItemButton } from "@mui/material";
+import {
+  Container,
+  Typography,
+  Box,
+  CircularProgress,
+  Alert,
+  Button,
+  Card,
+  CardContent,
+  CardMedia,
+  Chip
+} from "@mui/material";
 
 export default function Proveedores() {
   const [proveedores, setProveedores] = useState([]);
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
-  const [busqueda, setBusqueda] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    setIsLoading(true);
     fetch("http://localhost:3000/proveedores")
-      .then((res) => res.json())
-      .then((data) => setProveedores(data))
-      .catch((err) => console.error("Error cargando proveedores:", err));
+      .then((res) => {
+        if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
+        return res.json();
+      })
+      .then((data) => {
+        setProveedores(data);
+        setError(null);
+      })
+      .catch((err) => setError(err.message))
+      .finally(() => setIsLoading(false));
   }, []);
 
-  const proveedoresFiltrados = proveedores.filter((p) => {
-    const coincideBusqueda =
-      p.companyName.toLowerCase().includes(busqueda.toLowerCase());
-    const coincideCategoria =
-      categoriaSeleccionada === "" ||
-      p.categories.includes(categoriaSeleccionada.toLowerCase());
+  if (isLoading)
+    return (
+      <Container sx={{ display: "flex", justifyContent: "center", py: 8 }}>
+        <CircularProgress />
+      </Container>
+    );
 
-    return coincideBusqueda && coincideCategoria;
-  });
+  if (error)
+    return (
+      <Container sx={{ py: 4 }}>
+        <Alert severity="error">Error al cargar proveedores: {error}</Alert>
+      </Container>
+    );
 
   return (
-    <Box className="proveedores-layout">
-      {/*Panel de la izquierda*/}
-      <Box className="proveedores-sidebar">
-        <Typography variant="h5" sx={{ fontWeight: "bold", mb: 2 }}>
-          Buscar proveedor
-        </Typography>
-
-        <TextField
-          fullWidth
-          label="Buscar por nombre"
-          value={busqueda}
-          onChange={(e) => setBusqueda(e.target.value)}
-          sx={{ mb: 3 }}
-        />
-
-        <Typography variant="h6" sx={{ mb: 1 }}>
-          Categorías
-        </Typography>
-
-        <List>
-          {["Alimento", "Bebida", "Otros"].map((cat) => (
-            <ListItem key={cat} disablePadding>
-              <ListItemButton
-                selected={categoriaSeleccionada === cat.toLowerCase()}
-                onClick={() =>
-                  setCategoriaSeleccionada(
-                    categoriaSeleccionada === cat.toLowerCase()
-                      ? ""
-                      : cat.toLowerCase()
-                  )
-                }
-              >
-                {cat}
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-
-        <Typography variant="h6" sx={{ mt: 3 }}>
-          Lista de proveedores
-        </Typography>
-
-        <List className="proveedores-lista">
-          {proveedores.map((p) => (
-            <ListItem key={p.id_provider} disablePadding>
-              <ListItemButton>
-                {p.companyName}
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Box>
-
-      {/*Panel de la derecha*/}
-      <Box className="proveedores-resultados">
-        <Typography variant="h4" className="proveedores-title">
-          Proveedores
-        </Typography>
-
-        <Box className="proveedores-grid">
-          {proveedoresFiltrados.map((prov) => (
-            <Card key={prov.id_provider} className="proveedor-card">
+    <Container sx={{ py: 4 }}>
+      <Typography variant="h4" sx={{ mb: 4, fontWeight: "bold", textAlign: "center" }}>
+        Catálogo de Proveedores
+      </Typography>
+      <Box sx={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: 3 }}>
+        {proveedores.length > 0 ? (
+          proveedores.map((p) => (
+            <Card key={p.id_provider} sx={{ maxWidth: 350 }}>
+              <CardMedia
+                sx={{ height: 200 }}
+                image={p.image || "https://via.placeholder.com/350x200?text=Proveedor"}
+                title={p.companyName}
+              />
               <CardContent>
-                <Typography variant="h5" sx={{ fontWeight: "bold", mb: 1 }}>
-                  {prov.companyName}
+                <Typography variant="h5" sx={{ textAlign: "center", fontWeight: "bold" }}>
+                  {p.companyName}
                 </Typography>
-
-                <Box className="categorias-box">
-                  {prov.categories.map((c, index) => (
-                    <span key={index} className="categoria-tag">
-                      {c.charAt(0).toUpperCase() + c.slice(1)}
-                    </span>
-                  ))}
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    flexWrap: "wrap",
+                    gap: 0.5,
+                    my: 1
+                  }}
+                >
+                  {Array.isArray(p.categories) &&
+                    p.categories.map((cat, i) => (
+                      <Chip
+                        key={i}
+                        label={cat}
+                        size="small"
+                        color="primary"
+                        sx={{ textTransform: "capitalize", fontSize: "1rem" }}
+                      />
+                    ))}
                 </Box>
               </CardContent>
-
-              <CardActions>
+              <Box sx={{ p: 2, pt: 0, display: "flex", justifyContent: "center" }}>
                 <Button
-                  component={Link}
-                  to={`/proveedor/${prov.id_provider}`}
                   variant="contained"
-                  className="proveedor-btn"
+                  component={Link}
+                  to={`/proveedor/${p.id_provider}`}
                 >
-                  Más Info
+                  Más info
                 </Button>
-              </CardActions>
+              </Box>
             </Card>
-          ))}
-        </Box>
+          ))
+        ) : (
+          <Alert severity="info">No hay proveedores disponibles.</Alert>
+        )}
       </Box>
-    </Box>
+    </Container>
   );
 }
