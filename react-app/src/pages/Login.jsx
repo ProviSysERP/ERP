@@ -10,7 +10,10 @@ import {
   CardContent,
   Alert,
   CircularProgress,
+  InputAdornment,
+  Paper,
 } from "@mui/material";
+import { Mail, Lock } from "lucide-react";
 
 export default function Login() {
   const [formData, setFormData] = useState({ username: "", password: "" });
@@ -68,36 +71,64 @@ export default function Login() {
     <Box
       sx={{
         minHeight: "100vh",
-        background: "linear-gradient(to bottom right, #e3f2fd, #f5f5f5)",
+        width: "100%",
+        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         py: 4,
+        px: 2,
       }}
     >
-      <Container maxWidth="xs">
+      <Container maxWidth="sm">
         <Card
           sx={{
-            p: 3,
-            boxShadow: 4,
-            borderRadius: 3,
-            backgroundColor: "white",
+            borderRadius: 4,
+            boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)",
+            overflow: "hidden",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            backgroundColor: "#ffffff",
           }}
         >
-          <CardContent>
+          <Box
+            sx={{
+              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              py: 4,
+              px: 3,
+              textAlign: "center",
+            }}
+          >
             <Typography
-              variant="h5"
-              component="h1"
-              align="center"
-              sx={{ mb: 3, fontWeight: "bold" }}
+              variant="h4"
+              sx={{
+                fontWeight: 700,
+                color: "white",
+                mb: 1,
+              }}
             >
-              Iniciar sesión
+              Bienvenido de Vuelta
             </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "rgba(255, 255, 255, 0.8)",
+              }}
+            >
+              Inicia sesión para acceder a tu cuenta
+            </Typography>
+          </Box>
 
+          <CardContent sx={{ p: 4 }}>
             {mensaje && (
               <Alert
                 severity={mensaje.includes("Bienvenido") ? "success" : "error"}
-                sx={{ mb: 2 }}
+                sx={{
+                  mb: 3,
+                  borderRadius: 2,
+                  "& .MuiAlert-message": {
+                    fontSize: "0.95rem",
+                  },
+                }}
               >
                 {mensaje}
               </Alert>
@@ -105,54 +136,118 @@ export default function Login() {
 
             <form onSubmit={handleSubmit}>
               <TextField
-                label="Nombre de usuario"
+                label="Usuario o correo electrónico"
                 name="username"
-                variant="outlined"
                 fullWidth
                 margin="normal"
                 value={formData.username}
                 onChange={handleChange}
+                variant="outlined"
+                required
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Mail size={18} style={{ color: "#667eea", marginRight: "8px" }} />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 2,
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      boxShadow: "0 4px 12px rgba(102, 126, 234, 0.1)",
+                    },
+                    "&.Mui-focused": {
+                      boxShadow: "0 4px 12px rgba(102, 126, 234, 0.2)",
+                    },
+                  },
+                }}
               />
+
               <TextField
                 label="Contraseña"
                 name="password"
                 type="password"
-                variant="outlined"
                 fullWidth
                 margin="normal"
                 value={formData.password}
                 onChange={handleChange}
+                variant="outlined"
+                required
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Lock size={18} style={{ color: "#667eea", marginRight: "8px" }} />
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 2,
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      boxShadow: "0 4px 12px rgba(102, 126, 234, 0.1)",
+                    },
+                    "&.Mui-focused": {
+                      boxShadow: "0 4px 12px rgba(102, 126, 234, 0.2)",
+                    },
+                  },
+                }}
               />
 
               <Button
                 type="submit"
-                variant="contained"
-                color="primary"
                 fullWidth
                 disabled={loading}
-                sx={{ mt: 2, py: 1 }}
+                sx={{
+                  py: 1.5,
+                  mt: 3,
+                  mb: 2,
+                  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                  color: "white",
+                  fontWeight: 600,
+                  fontSize: "1rem",
+                  borderRadius: 2,
+                  textTransform: "none",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    boxShadow: "0 8px 20px rgba(102, 126, 234, 0.3)",
+                    transform: "translateY(-2px)",
+                  },
+                  "&:disabled": {
+                    background: "linear-gradient(135deg, #ccc 0%, #999 100%)",
+                    boxShadow: "none",
+                    transform: "none",
+                  },
+                }}
               >
                 {loading ? (
-                  <CircularProgress size={24} color="inherit" />
+                  <CircularProgress size={24} sx={{ color: "white" }} />
                 ) : (
-                  "Entrar"
+                  "Inicia Sesión"
                 )}
               </Button>
 
-              <Typography
-                variant="body2"
-                align="center"
-                sx={{ mt: 2, color: "text.secondary" }}
-              >
-                ¿No tienes cuenta?{" "}
+              <Box sx={{ textAlign: "center", pt: 1 }}>
+                <Typography variant="body2" sx={{ color: "#666", mb: 1 }}>
+                  ¿No tienes cuenta?
+                </Typography>
                 <Button
-                  variant="text"
-                  sx={{ color: "#1976d2", textTransform: "none" }}
                   onClick={() => navigate("/registrar")}
+                  sx={{
+                    color: "#667eea",
+                    fontWeight: 600,
+                    textTransform: "none",
+                    fontSize: "1rem",
+                    "&:hover": {
+                      backgroundColor: "rgba(102, 126, 234, 0.08)",
+                    },
+                  }}
                 >
-                  Regístrate
+                  Regístrate aquí
                 </Button>
-              </Typography>
+              </Box>
             </form>
           </CardContent>
         </Card>
