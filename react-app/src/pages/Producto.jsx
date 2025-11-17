@@ -12,6 +12,7 @@ import {
   Alert,
   Chip,
   Stack,
+  Link,
 } from "@mui/material";
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
@@ -19,12 +20,28 @@ import "slick-carousel/slick/slick-theme.css";
 
 export default function Producto() {
   const { id } = useParams();
+  const [provider, setProvider] = useState(null);
   const [product, setProduct] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const BASE_URL = "http://localhost:3000";
   const PLACEHOLDER = "https://via.placeholder.com/800x600?text=Sin+imagen";
+
+  const pullProviders = async (provId) => {
+    try {
+      const response = await fetch(`http://localhost:3000/proveedores/porProducto/${provId}`);
+      if (!response.ok) {
+        throw new Error(`Error HTTP: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log("Datos del proveedor obtenidos:", data);
+      return data;
+    } catch (err) {
+      console.error("Error al obtener proveedor:", err);
+      return null;
+    }
+  };
 
   const resolveImage = (img) => {
     if (!img) return PLACEHOLDER;
@@ -84,6 +101,14 @@ export default function Producto() {
         } else {
           throw new Error("Respuesta de API inválida");
         }
+
+        pullProviders(data.id_provider).then((providerData) => {
+            if (!providerData) {
+              setError("Error al cargar datos del proveedor.");
+              return;
+            }
+            setProvider(providerData);
+          });
       })
       .catch((err) => setError(err.message))
       .finally(() => setIsLoading(false));
@@ -166,7 +191,7 @@ return (
       >
         <Slider {...settings}>
           {product.images?.map((img, index) => (
-            <Box key={index} sx={{ height: "100%" }}>
+            <Box key={index} sx={{ }}>
               <CardMedia
                 component="img"
                 image={resolveImage(img)}
@@ -175,9 +200,11 @@ return (
                   width: "100%",
                   alignContent: "center",
                   alignItems: "center",
-                  height: "100%",
+                  height: "50%",
                   objectFit: "fill",
-                  borderRadius:"10px"
+                  borderRadius:"10px",
+                  maxHeight:450,
+                  minHeight:450,
                 }}
               />
             </Box>
@@ -220,12 +247,75 @@ return (
 
         <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
           <Button variant="contained" size="large">Añadir al carrito</Button>
-          <Button component={RouterLink} to="/" variant="outlined">
+          <Button component={RouterLink} to="/productos" variant="outlined">
             Volver
           </Button>
         </Box>
       </CardContent>
     </Card>
+
+{provider && (
+  <Card sx={{ mt: 4, p: 2 }}>
+    <CardContent>
+      <Typography variant="h5" sx={{ fontWeight: "bold", mb: 2 }}>
+        Producto cortesía de este proveedor
+      </Typography>
+
+      <Box
+        sx={{
+        }}
+      >
+      {(Array.isArray(provider) ? provider : [provider]).map((p) => (
+        <Card key={p.id_provider} sx={{ maxWidth: 350, mx: "auto" }}>
+          <CardMedia
+            sx={{ height: 200 }}
+            image={p.image || "https://via.placeholder.com/350x200?text=Proveedor"}
+            title={p.companyName}
+          />
+
+          <CardContent>
+            <Typography variant="h6" sx={{ textAlign: "center", fontWeight: "bold" }}>
+              {p.companyName}
+            </Typography>
+
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                flexWrap: "wrap",
+                gap: 0.5,
+                my: 1
+              }}
+            >
+              {Array.isArray(p.categories) &&
+                p.categories.map((cat, i) => (
+                  <Chip
+                    key={i}
+                    label={cat}
+                    size="small"
+                    color="primary"
+                    sx={{ textTransform: "capitalize" }}
+                  />
+                ))}
+            </Box>
+          </CardContent>
+
+          <Box sx={{ p: 2, pt: 0, display: "flex", justifyContent: "center" }}>
+            <Button
+              variant="contained"
+              component={Link}
+              to={`/proveedor/${p.id_provider}`}
+            >
+              Más info
+            </Button>
+          </Box>
+        </Card>
+      ))}
+    </Box>
+    </CardContent>
+  </Card>
+  
+)}
   </Container>
 );
 
