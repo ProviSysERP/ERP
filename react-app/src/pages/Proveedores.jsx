@@ -42,7 +42,7 @@ export default function Proveedores() {
           Categorías
         </Typography>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-          {["Alimento", "Bebida", "Otros"].map((cat) => (
+          {["Alimentos", "Bebidas", "Otros"].map((cat) => (
             <Button
               key={cat}
               variant={categoriaSeleccionada === cat.toLowerCase() ? "contained" : "outlined"}
