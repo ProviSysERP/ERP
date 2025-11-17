@@ -30,3 +30,15 @@
 .proveedor-btn {
   margin-top: auto;
 }
+
+.proveedores-sidebar {
+  width: 240px;
+  background-color: #e4e4e4;
+  padding: 1.5rem;
+  border-right: 1px solid #e4e4e4;
+  position: fixed;
+  top: 64px;
+  left: 0;
+  height: calc(100vh - 64px);
+  overflow-y: auto;
+}
