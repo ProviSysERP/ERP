@@ -13,10 +13,11 @@ import Register from './pages/Register.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import Productos from './pages/Productos.jsx'
 import Producto from './pages/Producto.jsx'
-import Pedidos from './pages/Pedidos.jsx'
+import HistorialPedidos from './pages/HistorialPedidos.jsx'
 import Home from './pages/Home.jsx'
 import CartaProveedores from './components/CartaProveedores.jsx'
 import Inventario from './pages/Inventario.jsx'
+import Pedidos from './pages/Pedidos.jsx'
 
 function App() {
   return (
@@ -114,6 +115,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Pedidos />
+              </ProtectedRoute>
+            }
+          />
+                    <Route
+            path="/historialpedidos"
+            element={
+              <ProtectedRoute>
+                <HistorialPedidos />
               </ProtectedRoute>
             }
           />
