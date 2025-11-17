@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {Container,Typography,Card,CardContent,CardMedia,Button,CircularProgress,Alert,Box,Chip} from "@mui/material";
+import { Container, Typography, Card, CardContent, CardMedia, Button, CircularProgress, Alert, Box, Chip, Rating } from "@mui/material";
 
 export default function Proveedor() {
   const { id } = useParams();
@@ -103,8 +103,13 @@ export default function Proveedor() {
               <ul style={{ paddingLeft: 18 }}>
                 {proveedor.rating.map((r, idx) => (
                   <li key={idx} style={{ marginBottom: 8 }}>
-                    <strong>{r.author || "Anónimo"}</strong> —{" "}
-                    <span style={{ color: "#666" }}>{r.stars ?? ""}★</span>
+                    <Rating
+                      name={`rating-${idx}`}
+                      value={r.score}
+                      readOnly={true}
+                      precision={1}
+                    />
+                    <div style={{ fontWeight: "bold" }}>{r.author || "Anónimo"}</div>
                     <div>{r.comment}</div>
                   </li>
                 ))}
