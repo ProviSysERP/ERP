@@ -44,71 +44,66 @@ export default function Proveedor() {
       </Container>
     );
 
+  const cardWidth = 350;
   return (
     <Container sx={{ py: 4 }}>
       <Button component={Link} to="/proveedores" variant="outlined" sx={{ mb: 3 }}>
         ← Volver al catálogo
       </Button>
 
-      <Card sx={{ maxWidth: 600, mx: "auto", p: 2, display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <CardMedia
-          component="img"
-          image={proveedor.image || "https://via.placeholder.com/200"}
-          alt={proveedor.companyName}
-          sx={{
-            width: 200,
-            height: 200,
-            borderRadius: "50%",
-            objectFit: "cover",
-            mb: 2
-          }}
-        />
-        <CardContent sx={{ width: "100%", textAlign: "center" }}>
-          <Typography variant="h4" sx={{ fontWeight: "bold", mb: 1 }}>
-            {proveedor.companyName}
-          </Typography>
-          <Box
+      <Box sx={{ display: "flex", justifyContent: "center", gap: 3, flexWrap: "wrap", width: "100%" }}>
+
+        {/*Carta principal*/}
+        <Card sx={{ width: cardWidth, minHeight: 500, p: 2, display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <CardMedia
+            component="img"
+            image={proveedor.image || "https://via.placeholder.com/200"}
+            alt={proveedor.companyName}
             sx={{
-              display: "flex",
-              justifyContent: "center",
-              flexWrap: "wrap",
-              gap: 0.5,
+              width: 150,
+              height: 150,
+              borderRadius: "50%",
+              objectFit: "cover",
               mb: 2
             }}
-          >
-            {Array.isArray(proveedor.categories) &&
-              proveedor.categories.map((cat, i) => (
-                <Chip
-                  key={i}
-                  label={cat}
-                  size="small"
-                  color="primary"
-                  sx={{ textTransform: "capitalize", fontSize: "1rem" }}
-                />
-              ))}
-          </Box>
-          <Typography variant="body1" sx={{ mb: 2, whiteSpace: "pre-wrap" }}>
-            {proveedor.description || "Sin descripción disponible."}
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            <strong>Disponibilidad:</strong>{" "}
-            {proveedor.availability
-              ? `${proveedor.availability.open} - ${proveedor.availability.close}`
-              : "Desconocida"}
-          </Typography>
+          />
+          <CardContent sx={{ width: "100%", textAlign: "center" }}>
+            <Typography variant="h5" sx={{ fontWeight: "bold", mb: 1 }}>
+              {proveedor.companyName}
+            </Typography>
+            <Box sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 0.5, mb: 2 }}>
+              {Array.isArray(proveedor.categories) &&
+                proveedor.categories.map((cat, i) => (
+                  <Chip
+                    key={i}
+                    label={cat.charAt(0).toUpperCase() + cat.slice(1)}
+                    size="small"
+                    color="primary"
+                    sx={{ fontSize: "1rem", textTransform: "capitalize" }}
+                  />
+                ))}
+            </Box>
+            <Typography variant="body2" sx={{ mb: 2, whiteSpace: "pre-wrap" }}>
+              {proveedor.description || "Sin descripción disponible."}
+            </Typography>
+            <Typography variant="body2" sx={{ mb: 2 }}>
+              <strong>Disponibilidad:</strong>{" "}
+              {proveedor.availability
+                ? `${proveedor.availability.open} - ${proveedor.availability.close}`
+                : "Desconocida"}
+            </Typography>
+          </CardContent>
+        </Card>
 
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="h6">Reseñas</Typography>
+        {/*Carta reseñas*/}
+        <Card sx={{ width: cardWidth, minHeight: 500, p: 2 }}>
+          <CardContent>
+            <Typography variant="h6" sx={{ mb: 2 }}>Reseñas de usuarios</Typography>
             {Array.isArray(proveedor.rating) && proveedor.rating.length > 0 ? (
               <ul style={{ paddingLeft: 18 }}>
                 {proveedor.rating.map((r, idx) => (
-                  <li key={idx} style={{ marginBottom: 8 }}>
-                    <Rating
-                      name={`rating-${idx}`}
-                      value={r.score}
-                      readOnly={true}
-                      precision={1}
-                    />
+                  <li key={idx} style={{ marginBottom: 12 }}>
+                    <Rating name={`rating-${idx}`} value={r.score} readOnly precision={1} />
                     <div style={{ fontWeight: "bold" }}>{r.author || "Anónimo"}</div>
                     <div>{r.comment}</div>
                   </li>
@@ -119,9 +114,10 @@ export default function Proveedor() {
                 Aún no hay reseñas para este proveedor.
               </Typography>
             )}
-          </Box>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+
+      </Box>
     </Container>
   );
 }
