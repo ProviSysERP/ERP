@@ -36,9 +36,9 @@
   background-color: #e4e4e4;
   padding: 1.5rem;
   border-right: 1px solid #e4e4e4;
-  height: 100vh;
   position: fixed;
-  top: 0;
+  top: 64px;
   left: 0;
+  height: calc(100vh - 64px);
   overflow-y: auto;
 }
