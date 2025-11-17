@@ -41,7 +41,7 @@ export default function Login() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: formData.username,
+          email: formData.username,
           password: formData.password,
         }),
       });
