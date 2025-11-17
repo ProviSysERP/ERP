@@ -30,6 +30,20 @@ export default function Perfil() {
     }
   };
 
+  const pullProviders = async (userId) => {
+    try {
+      const response = await fetch(`http://localhost:3000/proveedores/${userId}`);
+      if (!response.ok) {
+        throw new Error(`Error HTTP: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (err) {
+      console.error("Error al obtener proveedor:", err);
+      return null;
+    }
+  };
+
   useEffect(() => {
     fetch(`http://localhost:3000/usuarios/${id}`)
       .then((response) => {
