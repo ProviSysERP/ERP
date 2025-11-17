@@ -8,8 +8,8 @@ import {
   Alert,
   ImageList,
   ImageListItem,
-  ImageListItemBar,
   Button,
+  Chip,
 } from "@mui/material";
 import "./CartaProveedores.css";
 
@@ -31,6 +31,19 @@ export default function CartaProveedores() {
     return `${BASE_URL}/${trimmed}`;
   };
 
+  const formatCategories = (cats) => {
+    if (!cats) return "";
+    if (Array.isArray(cats)) {
+      return cats
+        .map((c) => {
+          const s = String(c || "");
+          return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+        })
+        .join(", ");
+    }
+    return String(cats);
+  };
+
   useEffect(() => {
     setIsLoading(true);
     setError(null);
@@ -41,7 +54,6 @@ export default function CartaProveedores() {
         return response.json();
       })
       .then((jsonData) => {
-        // Asegurarse que sea array
         if (!Array.isArray(jsonData)) {
           setProveedores([]);
           setError("Formato de datos inválido");
@@ -77,37 +89,93 @@ export default function CartaProveedores() {
 
       {proveedores && proveedores.length > 0 ? (
         <ImageList
-          variant="masonry"
+          variant="standard"
           cols={3}
-          gap={12}
+          gap={16}
+          rowHeight={290}
           sx={{
             width: "100%",
             margin: 0,
           }}
         >
           {proveedores.map((prov) => {
-            const key = prov.id_provider ?? prov.id ?? prov._id ?? prov.image ?? Math.random();
+            const key = prov.id_provider ?? prov.id ?? prov._id ?? prov.image ?? prov.name ?? Math.random();
             const img = resolveImage(prov.image ?? prov.profile_picture);
             const title = prov.name ?? prov.title ?? "Proveedor";
 
             return (
-              <ImageListItem key={key} sx={{ borderRadius: 2, overflow: "hidden" }}>
-                <Link to={`/proveedor/${prov.id_provider}`} style={{ display: "block" }}>
+              <ImageListItem
+                key={key}
+                sx={{
+                  borderRadius: 2,
+                  overflow: "hidden",
+                  height: 260,
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <Link to={`/proveedor/${prov.id_provider}`} style={{ display: "block", height: "100%", color: "inherit", textDecoration: "none" }}>
                   <img
                     src={img}
                     alt={title}
                     loading="lazy"
-                    style={{ width: "100%", display: "block", objectFit: "cover" }}
+                    style={{
+                      width: "100%",
+                      height: 200,
+                      display: "block",
+                      objectFit: "cover",
+                    }}
                     onError={(e) => {
                       e.currentTarget.onerror = null;
                       e.currentTarget.src = PLACEHOLDER;
                     }}
                   />
-                  <ImageListItemBar
-                    title={title}
-                    subtitle={prov.categories ? String(prov.categories) : ""}
-                    position="below"
-                  />
+
+                  {/* Contenedor inferior: título + chips */}
+                  <Box sx={{ p: 1, pb: 3 }}>
+                    <Typography
+                      variant="subtitle1"
+                      sx={{
+                        fontWeight: "bold",
+                        textAlign: "center",
+                        mb: 1,
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                      title={title}
+                    >
+                      {title}
+                    </Typography>
+
+                    <Box sx={{ display: "flex", justifyContent: "center", gap: 0.5, flexWrap: "wrap" }}>
+                      {Array.isArray(prov.categories) && prov.categories.length > 0 ? (
+                        prov.categories.map((cat, i) => (
+                          <Chip
+                            key={i}
+                            label={String(cat).charAt(0).toUpperCase() + String(cat).slice(1)}
+                            size="small"
+                            color="primary"
+                            sx={{
+                              textTransform: "capitalize",
+                              fontSize: "0.85rem",
+                              borderRadius: 10,
+                              px: 1.2,
+                              py: 0.3,
+                              boxShadow: "none",
+                            }}
+                          />
+                        ))
+                      ) : typeof prov.categories === "string" && prov.categories ? (
+                        <Chip
+                          label={String(prov.categories)}
+                          size="small"
+                          color="primary"
+                          sx={{ textTransform: "capitalize", fontSize: "0.80rem", borderRadius: 8, px: 0.9, py: 0.2 }}
+                        />
+                      ) : null}
+                    </Box>
+                  </Box>
                 </Link>
               </ImageListItem>
             );

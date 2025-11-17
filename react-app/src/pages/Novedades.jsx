@@ -47,13 +47,12 @@ export default function PromoCarousel() {
   return (
     <Box
       sx={{
-        minHeight: '100vh',
+        minHeight: '90vh',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',     
         justifyContent: 'flex-start',
-        pt: 6, 
-        bgcolor: '#f5f7fa',
+        pt: 8,
       }}
     >
       <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
