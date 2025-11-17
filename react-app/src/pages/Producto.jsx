@@ -166,7 +166,7 @@ return (
       >
         <Slider {...settings}>
           {product.images?.map((img, index) => (
-            <Box key={index} sx={{ height: "100%" }}>
+            <Box key={index} sx={{ }}>
               <CardMedia
                 component="img"
                 image={resolveImage(img)}
@@ -175,9 +175,11 @@ return (
                   width: "100%",
                   alignContent: "center",
                   alignItems: "center",
-                  height: "100%",
-                  objectFit: "fill",
-                  borderRadius:"10px"
+                  height: "50%",
+                  objectFit: "contain",
+                  borderRadius:"10px",
+                  maxHeight:450,
+                  minHeight:450,
                 }}
               />
             </Box>
@@ -220,7 +222,7 @@ return (
 
         <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
           <Button variant="contained" size="large">Añadir al carrito</Button>
-          <Button component={RouterLink} to="/" variant="outlined">
+          <Button component={RouterLink} to="/productos" variant="outlined">
             Volver
           </Button>
         </Box>
