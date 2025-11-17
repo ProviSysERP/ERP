@@ -52,7 +52,7 @@ export default function Login() {
         localStorage.setItem("token_type", token_type);
 
         setMensaje("¡Bienvenido!");
-        navigate("/");
+        navigate("/home");
       } else {
         setMensaje("Usuario o contraseña incorrectos");
       }

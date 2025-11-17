@@ -37,7 +37,7 @@ export default function Producto() {
   };
 
   const settings = {
-    dots: true,
+    dots: false,
     arrows: true,
     infinite: true,
     speed: 600,
@@ -150,6 +150,10 @@ return (
         },
         ".slick-next": {
           right: "10px",
+        },
+        ".slick-prev:before, .slick-next:before": {
+          color: "black", 
+          fontSize: "32px",
         },
       }}
     >
