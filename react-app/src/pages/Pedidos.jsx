@@ -7,11 +7,12 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import DirectionsIcon from '@mui/icons-material/Directions';
 
- const [products, setProducts] = useState([]);
+
+export default function Pedidos() {
+
+     const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  
-export default function Pedidos() {
   return (
     <Paper
       component="form"
