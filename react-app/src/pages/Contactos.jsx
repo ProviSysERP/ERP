@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
-import { Typography, Container, Box, CircularProgress, Alert, Button, CardMedia, CardContent, CardActions, Card  }  from '@mui/material';
+import { Typography, Container, Box, CircularProgress, Alert, Button, CardMedia, CardContent, CardActions, Card } from '@mui/material';
 
 export default function Novedades() {
   const [users, setUsers] = useState([]);
@@ -53,7 +53,7 @@ export default function Novedades() {
         Usuarios desde Base de Datos
       </Typography>
 
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr', md: '1fr 1fr' }, gap: 3 }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: 'repeat(4, 1fr)' }, gap: 3 }}>
         {users && users.length > 0 ? (
           users.map((user) => (
             <Card key={user.id_user} sx={{ maxWidth: 345 }}>
