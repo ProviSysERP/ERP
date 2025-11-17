@@ -21,7 +21,7 @@ const createWindow = () => {
         {
           label: 'Menu',
           click: () => {
-            win.loadURL('http://localhost:5173/');
+            win.loadURL('http://localhost:5173/home');
           },
         },
         {
@@ -34,6 +34,12 @@ const createWindow = () => {
           label: 'Contactos',
           click: () => {
             win.loadURL('http://localhost:5173/contactos');
+          },
+        },
+        {
+          label: 'Productos',
+          click: () => {
+            win.loadURL('http://localhost:5173/productos');
           },
         },
         { type: 'separator' },
