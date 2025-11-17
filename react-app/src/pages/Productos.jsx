@@ -55,16 +55,13 @@ export default function Productos() {
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: 'repeat(4, 1fr)' }, gap: 3 }}>
             {products && products.length > 0 ? (
             products.map((product) => (
-                <Card key={product.id_product} sx={{ maxWidth: 345 }}>
+                <Card key={product.id_product} sx={{ maxWidth: 345, height: "100%", display: "flex", flexDirection: "column" }}>
                 <CardMedia
                     sx={{ height: 140 }}
                     image={(product.images && product.images.length && product.images[0]) || product.image || '/placeholder.jpg'}
                     title={product.name}
                 />
                 <CardContent>
-                    <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
-                    <strong>ID:</strong> {product.id_product}
-                    </Typography>
                     <Typography gutterBottom variant="h5" component="div">
                     {product.name}
                     </Typography>
@@ -72,7 +69,7 @@ export default function Productos() {
                     <strong>Precio:</strong> {product.price}
                     </Typography>
                 </CardContent>
-                <CardActions>
+                <CardActions sx={{ mt: "auto"}}>
                     <Button size="small">Compartir</Button>
                     <Button
                     size="small"
