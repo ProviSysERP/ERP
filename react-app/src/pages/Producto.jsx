@@ -155,9 +155,23 @@ export default function Producto() {
     "";
 
 return (
-  <Container sx={{ py: { xs: 3, md: 6 } }}>
+  <Container sx={{py: { xs: 3, md: 6 } }}>
+
+    <Box
+    sx={{
+      display: "flex",
+      flexDirection: { xs: "column", md: "row" },
+      gap: 3,
+      justifyContent: "center",
+      alignItems: "flex-start",
+    }}
+  >
     <Card
       sx={{
+        minWidth: { xs: "100%", md: 600 },
+        flex: 2,
+        borderRadius: 3,
+        overflow: "hidden",
         display: "flex",
         flexDirection: { xs: "column", md: "row" },
         borderRadius: 3,
@@ -255,67 +269,66 @@ return (
     </Card>
 
 {provider && (
-  <Card sx={{ mt: 4, p: 2 }}>
-    <CardContent>
-      <Typography variant="h5" sx={{ fontWeight: "bold", mb: 2 }}>
-        Producto cortesía de este proveedor
-      </Typography>
-
-      <Box
+      <Card
         sx={{
+          minHeight: 450,
+          flex: 1,
+          maxWidth: 300,
+          minWidth: 260,
+          borderRadius: 3,
+          overflow: "hidden",
+          boxShadow: "0 12px 40px rgba(3,18,26,0.12)",
         }}
       >
-      {(Array.isArray(provider) ? provider : [provider]).map((p) => (
-        <Card key={p.id_provider} sx={{ maxWidth: 350, mx: "auto" }}>
-          <CardMedia
-            sx={{ height: 200 }}
-            image={p.image || "https://via.placeholder.com/350x200?text=Proveedor"}
-            title={p.companyName}
-          />
+        <CardContent>
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: 700, textAlign: "center", mb: 2 }}
+          >
+            Provided by
+          </Typography>
 
-          <CardContent>
-            <Typography variant="h6" sx={{ textAlign: "center", fontWeight: "bold" }}>
-              {p.companyName}
-            </Typography>
+          {(Array.isArray(provider) ? provider : [provider]).map((p) => (
+            <Card key={p.id_provider} sx={{ boxShadow: "none" }}>
+              <CardMedia
+                sx={{ height: 160, objectFit: "contain" }}
+                image={p.image || "https://via.placeholder.com/350x200?text=Proveedor"}
+              />
 
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                flexWrap: "wrap",
-                gap: 0.5,
-                my: 1
-              }}
-            >
-              {Array.isArray(p.categories) &&
-                p.categories.map((cat, i) => (
-                  <Chip
-                    key={i}
-                    label={cat}
-                    size="small"
-                    color="primary"
-                    sx={{ textTransform: "capitalize" }}
-                  />
-                ))}
-            </Box>
-          </CardContent>
+              <CardContent sx={{ textAlign: "center" }}>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                  {p.companyName}
+                </Typography>
 
-          <Box sx={{ p: 2, pt: 0, display: "flex", justifyContent: "center" }}>
-            <Button
-              variant="contained"
-              component={Link}
-              to={`/proveedor/${p.id_provider}`}
-            >
-              Más info
-            </Button>
-          </Box>
-        </Card>
-      ))}
-    </Box>
-    </CardContent>
-  </Card>
-  
-)}
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: 1,
+                    flexWrap: "wrap",
+                    my: 1,
+                  }}
+                >
+                  {p.categories?.map((cat, i) => (
+                    <Chip key={i} label={cat} size="small" color="primary" />
+                  ))}
+                </Box>
+
+                <Button
+                  variant="contained"
+                  size="small"
+                  component={RouterLink}
+                  to={`/proveedor/${p.id_provider}`}
+                >
+                  More info
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </CardContent>
+      </Card>
+  )}
+  </Box>
   </Container>
 );
 

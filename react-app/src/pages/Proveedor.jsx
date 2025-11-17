@@ -50,77 +50,85 @@ export default function Proveedor() {
         ← Volver al catálogo
       </Button>
 
-      <Card sx={{ maxWidth: 600, mx: "auto", p: 2, display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <CardMedia
-          component="img"
-          image={proveedor.image || "https://via.placeholder.com/200"}
-          alt={proveedor.companyName}
-          sx={{
-            width: 200,
-            height: 200,
-            borderRadius: "50%",
-            objectFit: "cover",
-            mb: 2
-          }}
-        />
-        <CardContent sx={{ width: "100%", textAlign: "center" }}>
+      {/* CARD ANCHA */}
+      <Card
+        sx={{
+          width: "100%",
+          maxWidth: "1200px",
+          mx: "auto",
+          p: 3,
+          display: "flex",
+          gap: 4,
+          alignItems: "flex-start"
+        }}
+      >
+        {/* COLUMNA IZQUIERDA */}
+        <Box sx={{ width: "40%", textAlign: "center" }}>
+          <CardMedia
+            component="img"
+            image={proveedor.image || "https://via.placeholder.com/200"}
+            alt={proveedor.companyName}
+            sx={{
+              width: 180,
+              height: 180,
+              borderRadius: "50%",
+              objectFit: "cover",
+              mx: "auto",
+              mb: 2
+            }}
+          />
+
           <Typography variant="h4" sx={{ fontWeight: "bold", mb: 1 }}>
             {proveedor.companyName}
           </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              flexWrap: "wrap",
-              gap: 0.5,
-              mb: 2
-            }}
-          >
+
+          <Box sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 1, mb: 2 }}>
             {Array.isArray(proveedor.categories) &&
               proveedor.categories.map((cat, i) => (
                 <Chip
                   key={i}
-                  label={cat}
+                  label={cat.charAt(0).toUpperCase() + cat.slice(1)}
                   size="small"
                   color="primary"
-                  sx={{ textTransform: "capitalize", fontSize: "1rem" }}
+                  sx={{ fontSize: "1rem" }}
                 />
               ))}
           </Box>
+
           <Typography variant="body1" sx={{ mb: 2, whiteSpace: "pre-wrap" }}>
             {proveedor.description || "Sin descripción disponible."}
           </Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>
+
+          <Typography variant="body1">
             <strong>Disponibilidad:</strong>{" "}
             {proveedor.availability
               ? `${proveedor.availability.open} - ${proveedor.availability.close}`
               : "Desconocida"}
           </Typography>
+        </Box>
 
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="h6">Reseñas</Typography>
-            {Array.isArray(proveedor.rating) && proveedor.rating.length > 0 ? (
-              <ul style={{ paddingLeft: 18 }}>
-                {proveedor.rating.map((r, idx) => (
-                  <li key={idx} style={{ marginBottom: 8 }}>
-                    <Rating
-                      name={`rating-${idx}`}
-                      value={r.score}
-                      readOnly={true}
-                      precision={1}
-                    />
-                    <div style={{ fontWeight: "bold" }}>{r.author || "Anónimo"}</div>
-                    <div>{r.comment}</div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <Typography variant="body2" sx={{ color: "#666" }}>
-                Aún no hay reseñas para este proveedor.
-              </Typography>
-            )}
-          </Box>
-        </CardContent>
+        {/* COLUMNA DERECHA (RESEÑAS) */}
+        <Box sx={{ width: "60%" }}>
+          <Typography variant="h5" sx={{ mb: 2, fontWeight: "bold" }}>
+            Reseñas de usuarios
+          </Typography>
+
+          {Array.isArray(proveedor.rating) && proveedor.rating.length > 0 ? (
+            <ul style={{ margin: 0, paddingLeft: 18 }}>
+              {proveedor.rating.map((r, idx) => (
+                <li key={idx} style={{ marginBottom: 16 }}>
+                  <Rating value={r.score} readOnly precision={1} />
+                  <div style={{ fontWeight: "bold" }}>{r.author || "Anónimo"}</div>
+                  <div>{r.comment}</div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <Typography variant="body2" sx={{ color: "#666" }}>
+              Aún no hay reseñas para este proveedor.
+            </Typography>
+          )}
+        </Box>
       </Card>
     </Container>
   );
