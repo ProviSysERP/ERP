@@ -176,7 +176,7 @@ return (
                   alignContent: "center",
                   alignItems: "center",
                   height: "50%",
-                  objectFit: "contain",
+                  objectFit: "fill",
                   borderRadius:"10px",
                   maxHeight:450,
                   minHeight:450,
