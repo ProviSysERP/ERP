@@ -63,7 +63,7 @@ export default function Proveedores() {
           Catálogo de Proveedores
         </Typography>
 
-        <Box sx={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: 3 }}>
+        <Box sx={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 3 }}>
           {proveedoresFiltrados.length > 0 ? (
             proveedoresFiltrados.map((p) => (
               <Card key={p.id_provider} sx={{ maxWidth: 350 }}>

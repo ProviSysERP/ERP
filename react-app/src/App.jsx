@@ -16,6 +16,7 @@ import Producto from './pages/Producto.jsx'
 import Pedidos from './pages/Pedidos.jsx'
 import Home from './pages/Home.jsx'
 import CartaProveedores from './components/CartaProveedores.jsx'
+import Inventario from './pages/Inventario.jsx'
 
 function App() {
   return (
@@ -113,6 +114,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Pedidos />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/inventario"
+            element={
+              <ProtectedRoute>
+                <Inventario />
               </ProtectedRoute>
             }
           />
