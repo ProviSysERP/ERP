@@ -136,7 +136,7 @@ export default function Login() {
 
             <form onSubmit={handleSubmit}>
               <TextField
-                label="Usuario o correo electrónico"
+                label="Correo electrónico"
                 name="username"
                 fullWidth
                 margin="normal"
