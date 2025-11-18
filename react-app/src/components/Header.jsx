@@ -223,9 +223,6 @@ export default function PrimarySearchAppBar() {
           </Typography>
 
           <Search>
-            <SearchIconWrapper>
-     
-            </SearchIconWrapper>
 
             <Autocomplete
               freeSolo
