@@ -42,6 +42,7 @@ export default function Novedades() {
   }
 
   return (
+  
     <Container sx={{ py: 4 }}>
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>

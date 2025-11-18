@@ -7,6 +7,7 @@ import "slick-carousel/slick/slick-theme.css";
 import "./Novedades.css";
 import { Link } from 'react-router-dom';
 
+
 const slides = [];
 
 export default function PromoCarousel() {

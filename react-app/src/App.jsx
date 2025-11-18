@@ -22,7 +22,6 @@ import Pedidos from './pages/Pedidos.jsx'
 function App() {
   return (
     <Box sx={{ width: '100%', minHeight: '100vh' }}>
-      <Header />
       <Container>
         <Routes>
           {/* Rutas públicas */}
@@ -118,7 +117,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-                    <Route
+          <Route
             path="/historialpedidos"
             element={
               <ProtectedRoute>
@@ -131,6 +130,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Inventario />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/header"
+            element={
+              <ProtectedRoute>
+                <Header />
               </ProtectedRoute>
             }
           />
