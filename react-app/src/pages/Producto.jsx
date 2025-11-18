@@ -172,7 +172,6 @@ return (
         minWidth: 900,
         flex: 2,
         borderRadius: 3,
-        overflow: "hidden",
         display: "flex",
         flexDirection: { xs: "column", md: "row" },
         borderRadius: 3,
