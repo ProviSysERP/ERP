@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { obtenerUsuario } from "./components/ObtenerUsuario";
+import { obtenerUsuario } from "../components/ObtenerUsuario.js";
 
 export default function ProtectedRoute({ children }) {
   const navigate = useNavigate();
