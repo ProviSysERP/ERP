@@ -5,7 +5,6 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
@@ -18,7 +17,8 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 
-
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -46,22 +46,12 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   justifyContent: 'center',
 }));
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
-}));
-
 export default function PrimarySearchAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+
+  const [inputValue, setInputValue] = React.useState('');
+  const [value, setValue] = React.useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -83,7 +73,50 @@ export default function PrimarySearchAppBar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const searchOptions = [
+    { label: 'Página principal', path: '/home' },
+    { label: 'Chat', path: '/Chat' },
+    { label: 'Pedidos', path: '/Pedidos' },
+    { label: 'Contactos', path: '/contactos' },
+    { label: 'Historial de Pedidos', path: '/historialpedidos' },
+    { label: 'Proveedores', path: '/proveedores' },
+    { label: 'Productos', path: '/productos' },
+  ];
 
+  const navigateTo = (path) => {
+    if (!path) return;
+    window.location.href = path;
+  };
+
+  const handleOptionChange = (event, newValue) => {
+    setValue(newValue);
+    if (newValue && typeof newValue === 'object' && newValue.path) {
+      navigateTo(newValue.path);
+    }
+    if (typeof newValue === 'string' && newValue.trim()) {
+      const match = searchOptions.find(
+        (o) => o.label.toLowerCase() === newValue.trim().toLowerCase()
+      );
+      if (match) navigateTo(match.path);
+      else navigateTo(`/search?q=${encodeURIComponent(newValue.trim())}`);
+    }
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      const text = inputValue.trim();
+      if (!text) return;
+      const match = searchOptions.find(
+        (o) => o.label.toLowerCase() === text.toLowerCase()
+      );
+      if (match) {
+        navigateTo(match.path);
+      } else {
+        navigateTo(`/search?q=${encodeURIComponent(text)}`);
+      }
+    }
+  };
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -179,23 +212,73 @@ export default function PrimarySearchAppBar() {
             variant="h6"
             noWrap
             component="div"
-            onClick={() => window.location.href = '/home'}
-            sx={{ display: { xs: 'none', sm: 'block' }, cursor: 'pointer', '&:hover': { opacity: 0.8 } }}
+            onClick={() => (window.location.href = '/home')}
+            sx={{
+              display: { xs: 'none', sm: 'block' },
+              cursor: 'pointer',
+              '&:hover': { opacity: 0.8 },
+            }}
           >
             ProviSys
           </Typography>
+
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
+
+            <Autocomplete
+              freeSolo
+              disableClearable
+              options={searchOptions}
+              getOptionLabel={(option) =>
+                typeof option === 'string' ? option : option.label
+              }
+              value={value}
+              inputValue={inputValue}
+              onInputChange={(event, newInputValue) => {
+                setInputValue(newInputValue);
+              }}
+              onChange={handleOptionChange}
+              sx={{
+                width: { xs: '100%', md: '260px' },
+                '& .MuiInputBase-root': {
+                  color: 'inherit',
+                  paddingLeft: '0 !important',
+                },
+                '& .MuiInputBase-input': {
+                  paddingLeft: 'calc(1em + 32px)',
+                },
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  placeholder="Search…"
+                  variant="standard"
+                  InputProps={{
+                    ...params.InputProps,
+                    disableUnderline: false,
+                    sx: { color: 'inherit' },
+                    onKeyDown: handleKeyDown,
+                    'aria-label': 'search',
+                  }}
+                  inputProps={{
+                    ...params.inputProps,
+                    'aria-label': 'search',
+                  }}
+                />
+              )}
             />
           </Search>
+
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton onClick={() => window.location.href = '/Chat'} size="large" aria-label="show 4 new mails" color="inherit">
+            <IconButton
+              onClick={() => (window.location.href = '/Chat')}
+              size="large"
+              aria-label="show 4 new mails"
+              color="inherit"
+            >
               <Badge badgeContent={4} color="error">
                 <MailIcon />
               </Badge>
@@ -204,7 +287,7 @@ export default function PrimarySearchAppBar() {
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
-              onClick={() => window.location.href = '/Pedidos'}
+              onClick={() => (window.location.href = '/Pedidos')}
             >
               <Badge badgeContent={17} color="error">
                 <NotificationsIcon />
@@ -243,7 +326,4 @@ export default function PrimarySearchAppBar() {
       {renderMenu}
     </Box>
   );
-
 }
-
-
