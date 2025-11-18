@@ -14,6 +14,7 @@ export default function ProtectedRoute({ children }) {
         setIsAuthenticated(true);
       } else {
         setIsAuthenticated(false);
+        localStorage.removeItem("token");
         navigate("/login");
       }
       setLoading(false);
