@@ -1,12 +1,14 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Container, Typography, Card, CardContent, CardMedia, Button, CircularProgress, Alert, Box, Chip, Rating } from "@mui/material";
+import './Proveedor.css';
+import { Container, Typography, Card, CardMedia, Button, CircularProgress, Alert, Box, Chip, Rating } from "@mui/material";
 
 export default function Proveedor() {
   const { id } = useParams();
   const [proveedor, setProveedor] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [openReseñas, setOpenReseñas] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -50,19 +52,17 @@ export default function Proveedor() {
         ← Volver al catálogo
       </Button>
 
-      {/* CARD ANCHA */}
       <Card
         sx={{
           width: "100%",
-          maxWidth: "1200px",
+          maxWidth: 1100,
           mx: "auto",
           p: 3,
           display: "flex",
-          gap: 4,
-          alignItems: "flex-start"
+          gap: 4
         }}
       >
-        {/* COLUMNA IZQUIERDA */}
+        {/*izquierda*/}
         <Box sx={{ width: "40%", textAlign: "center" }}>
           <CardMedia
             component="img"
@@ -78,45 +78,82 @@ export default function Proveedor() {
             }}
           />
 
-          <Typography variant="h4" sx={{ fontWeight: "bold", mb: 1 }}>
+          <Typography variant="h5" sx={{ fontWeight: "bold", mb: 1 }}>
             {proveedor.companyName}
           </Typography>
 
-          <Box sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 1, mb: 2 }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              flexWrap: "wrap",
+              gap: 1,
+              mb: 2
+            }}
+          >
             {Array.isArray(proveedor.categories) &&
               proveedor.categories.map((cat, i) => (
                 <Chip
                   key={i}
                   label={cat.charAt(0).toUpperCase() + cat.slice(1)}
-                  size="small"
                   color="primary"
-                  sx={{ fontSize: "1rem" }}
                 />
               ))}
           </Box>
+        </Box>
 
+        {/*derecha*/}
+        <Box sx={{ width: "60%" }}>
           <Typography variant="body1" sx={{ mb: 2, whiteSpace: "pre-wrap" }}>
             {proveedor.description || "Sin descripción disponible."}
           </Typography>
 
-          <Typography variant="body1">
+          <Typography variant="body1" sx={{ mb: 2 }}>
             <strong>Disponibilidad:</strong>{" "}
             {proveedor.availability
               ? `${proveedor.availability.open} - ${proveedor.availability.close}`
               : "Desconocida"}
           </Typography>
         </Box>
+      </Card>
 
-        {/* COLUMNA DERECHA (RESEÑAS) */}
-        <Box sx={{ width: "60%" }}>
-          <Typography variant="h5" sx={{ mb: 2, fontWeight: "bold" }}>
-            Reseñas de usuarios
+      {/*componente drawer de mui para las reseñas*/}
+      <Card
+        sx={{
+          width: "100%",
+          maxWidth: 1100,
+          mx: "auto",
+          mt: 3,
+          borderRadius: 2,
+          overflow: "hidden",
+          transition: "max-height 0.3s ease",
+          maxHeight: openReseñas ? 600 : 60
+        }}
+      >
+        {/*componente minimizado haciendo click*/}
+        <Box
+          onClick={() => setOpenReseñas(!openReseñas)}
+          sx={{
+            p: 2,
+            backgroundColor: "#f0f0f0",
+            cursor: "pointer",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center"
+          }}
+        >
+          <Typography variant="h6">Reseñas de Usuarios</Typography>
+          <Typography sx={{ fontSize: "1.2rem" }}>
+            {openReseñas ? "↑" : "↓"}
           </Typography>
+        </Box>
 
+        {/*lo que se ve al expandirse las reseñas*/}
+        <Box sx={{ p: 2, overflowY: "auto", height: openReseñas ? "auto" : 0 }}>
           {Array.isArray(proveedor.rating) && proveedor.rating.length > 0 ? (
-            <ul style={{ margin: 0, paddingLeft: 18 }}>
+            <ul style={{ paddingLeft: 18 }}>
               {proveedor.rating.map((r, idx) => (
-                <li key={idx} style={{ marginBottom: 16 }}>
+                <li key={idx} style={{ marginBottom: 12 }}>
                   <Rating value={r.score} readOnly precision={1} />
                   <div style={{ fontWeight: "bold" }}>{r.author || "Anónimo"}</div>
                   <div>{r.comment}</div>
