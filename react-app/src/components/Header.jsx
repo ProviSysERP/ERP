@@ -18,6 +18,8 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 
+
+
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -80,6 +82,8 @@ export default function PrimarySearchAppBar() {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+
+
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -175,7 +179,7 @@ export default function PrimarySearchAppBar() {
             variant="h6"
             noWrap
             component="div"
-            onClick={() => window.location.href = '/'}
+            onClick={() => window.location.href = '/home'}
             sx={{ display: { xs: 'none', sm: 'block' }, cursor: 'pointer', '&:hover': { opacity: 0.8 } }}
           >
             ProviSys
@@ -191,7 +195,7 @@ export default function PrimarySearchAppBar() {
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+            <IconButton onClick={() => window.location.href = '/Chat'} size="large" aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="error">
                 <MailIcon />
               </Badge>
@@ -200,6 +204,7 @@ export default function PrimarySearchAppBar() {
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
+              onClick={() => window.location.href = '/Pedidos'}
             >
               <Badge badgeContent={17} color="error">
                 <NotificationsIcon />

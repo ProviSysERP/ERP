@@ -18,11 +18,11 @@ import Home from './pages/Home.jsx'
 import CartaProveedores from './components/CartaProveedores.jsx'
 import Inventario from './pages/Inventario.jsx'
 import Pedidos from './pages/Pedidos.jsx'
+import Chat from './pages/Chat.jsx'
 
 function App() {
   return (
     <Box sx={{ width: '100%', minHeight: '100vh' }}>
-      <Header />
       <Container>
         <Routes>
           {/* Rutas públicas */}
@@ -43,6 +43,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Perfil />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/chat"
+            element={
+              <ProtectedRoute>
+                <Chat />
               </ProtectedRoute>
             }
           />
@@ -118,7 +126,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-                    <Route
+          <Route
             path="/historialpedidos"
             element={
               <ProtectedRoute>
@@ -131,6 +139,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Inventario />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/header"
+            element={
+              <ProtectedRoute>
+                <Header />
               </ProtectedRoute>
             }
           />

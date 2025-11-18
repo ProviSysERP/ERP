@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { Typography, Container, Box, CircularProgress, Alert, Button, CardMedia, CardContent, CardActions, Card  }  from '@mui/material';
+import Header from '../components/Header.jsx'
 
 export default function Productos() {
   const [products, setProducts] = useState([]);
@@ -42,6 +43,7 @@ export default function Productos() {
   }
     return (
         <Container sx={{ py: 4 }}>
+            <Header/>
         {error && (
             <Alert severity="error" sx={{ mb: 2 }}>
             Error: {error}

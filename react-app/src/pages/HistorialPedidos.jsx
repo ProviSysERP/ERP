@@ -1,7 +1,7 @@
 // OrdersDashboard.jsx — versión completa con MUI
 // Incluye: GET/POST/PUT/DELETE, paginación, búsqueda, filtros, modal detalle/edición, crear pedido,
 // Snackbar de éxito/error, exportar a PDF (jspdf), tema claro/oscuro (toggle), responsive
-
+import Header from '../components/Header.jsx'
 import React, { useEffect, useMemo, useState } from "react";
 import {
   Box,
@@ -226,7 +226,9 @@ export default function HistorialPedidos() {
   const visible = filtered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
+   
     <ThemeProvider theme={theme}>
+      <Header/>
       <Paper sx={{ minHeight: '100vh' }}>
         <AppBar position="static">
           <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>

@@ -1,6 +1,7 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {Container,Typography,Card,CardContent,CardMedia,Button,CircularProgress,Alert,Chip,Box} from "@mui/material";
+import Header from '../components/Header.jsx'
 
 export default function Perfil() {
   const { id } = useParams();
@@ -92,10 +93,10 @@ export default function Perfil() {
 
   return (
     <Container sx={{ py: 4 }}>
+        <Header/>
       <Button component={Link} to="/contactos" variant="outlined" sx={{ mb: 3 }}>
         ← Volver
       </Button>
-
       <Button
         variant="contained"
         color="error"
