@@ -47,6 +47,7 @@ export default function Proveedor() {
 
   return (
     <Container sx={{ py: 4 }}>
+        <Header/>
       <Button component={Link} to="/proveedores" variant="outlined" sx={{ mb: 3 }}>
         ← Volver al catálogo
       </Button>
