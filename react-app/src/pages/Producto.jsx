@@ -168,7 +168,7 @@ return (
   >
     <Card
       sx={{
-        minWidth: { xs: "100%", md: 600 },
+        minWidth: 900,
         flex: 2,
         borderRadius: 3,
         overflow: "hidden",
@@ -201,6 +201,7 @@ return (
           width: { xs: "100%", md: "48%" },
           height: "100%",
           overflow: "hidden",
+          minWidth: 500
         }}
       >
         <Slider {...settings}>
@@ -285,7 +286,7 @@ return (
             variant="h6"
             sx={{ fontWeight: 700, textAlign: "center", mb: 2 }}
           >
-            Provided by
+            Proveedor del Producto
           </Typography>
 
           {(Array.isArray(provider) ? provider : [provider]).map((p) => (
@@ -313,15 +314,6 @@ return (
                     <Chip key={i} label={cat} size="small" color="primary" />
                   ))}
                 </Box>
-
-                <Button
-                  variant="contained"
-                  size="small"
-                  component={RouterLink}
-                  to={`/proveedor/${p.id_provider}`}
-                >
-                  More info
-                </Button>
               </CardContent>
             </Card>
           ))}
