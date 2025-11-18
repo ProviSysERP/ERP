@@ -175,7 +175,7 @@ export default function PrimarySearchAppBar() {
             variant="h6"
             noWrap
             component="div"
-            onClick={() => window.location.href = '/'}
+            onClick={() => window.location.href = '/home'}
             sx={{ display: { xs: 'none', sm: 'block' }, cursor: 'pointer', '&:hover': { opacity: 0.8 } }}
           >
             ProviSys
