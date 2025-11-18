@@ -2,7 +2,6 @@ import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import './Proveedor.css';
 import { Container, Typography, Card, CardMedia, Button, CircularProgress, Alert, Box, Chip, Rating } from "@mui/material";
-import { Container, Typography, Card, CardContent, CardMedia, Button, CircularProgress, Alert, Box, Chip, Rating } from "@mui/material";
 import Header from '../components/Header.jsx'
 
 export default function Proveedor() {
