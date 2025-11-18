@@ -10,6 +10,7 @@ export default function Proveedor() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openReseñas, setOpenReseñas] = useState(false);
+  const [openProductos, setOpenProductos] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -116,6 +117,63 @@ export default function Proveedor() {
               ? `${proveedor.availability.open} - ${proveedor.availability.close}`
               : "Desconocida"}
           </Typography>
+        </Box>
+      </Card>
+
+      {/*el mismo componente drawer de mui pero para los productos*/}      
+      <Card
+        sx={{
+          width: "100%",
+          maxWidth: 1100,
+          mx: "auto",
+          mt: 3,
+          borderRadius: 2,
+          overflow: "hidden",
+          transition: "max-height 0.3s ease",
+          maxHeight: openProductos ? 600 : 60
+        }}
+      >
+        {/*componente minimizado haciendo click*/}
+        <Box
+          onClick={() => setOpenProductos(!openProductos)}
+          sx={{
+            p: 2,
+            backgroundColor: "#f0f0f0",
+            cursor: "pointer",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center"
+          }}
+        >
+          <Typography variant="h6">Productos del Proveedor</Typography>
+          <Typography sx={{ fontSize: "1.2rem" }}>
+            {openProductos ? "↑" : "↓"}
+          </Typography>
+        </Box>
+
+        {/*contenedor que se ve al expandirse*/}
+        <Box sx={{ p: 2, overflowY: "auto", height: openProductos ? "auto" : 0 }}>
+          {Array.isArray(proveedor.products) && proveedor.products.length > 0 ? (
+            <ul style={{ paddingLeft: 18 }}>
+              {proveedor.products.map((prod, idx) => (
+                <li key={idx} style={{ marginBottom: 12 }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+                    {prod.name}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: "#666" }}>
+                    {prod.description || "Sin descripción."}
+                  </Typography>
+                  <Typography variant="body2" sx={{ mt: 0.5 }}>
+                    Precio: {prod.price != null ? `€ ${prod.price}` : "No disponible"}
+                  </Typography>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <Typography variant="body2" sx={{ color: "#666" }}>
+              No hay productos para este proveedor.
+            </Typography>
+          )}
         </Box>
       </Card>
 
