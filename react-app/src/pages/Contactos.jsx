@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { Typography, Container, Box, CircularProgress, Alert, Button, CardMedia, CardContent, CardActions, Card } from '@mui/material';
+import Header from '../components/Header.jsx'
 
 export default function Novedades() {
   const [users, setUsers] = useState([]);
@@ -49,7 +50,7 @@ export default function Novedades() {
           Error: {error}
         </Alert>
       )}
-
+     <Header/> 
       <Typography variant="h4" component="h2" sx={{ mb: 4, fontWeight: 'bold' }}>
         Usuarios desde Base de Datos
       </Typography>

@@ -1,6 +1,7 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {Container,Typography,Card,CardContent,CardMedia,Button,CircularProgress,Alert,Chip,Box} from "@mui/material";
+import Header from '../components/Header.jsx'
 
 export default function Perfil() {
   const { id } = useParams();

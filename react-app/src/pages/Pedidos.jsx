@@ -7,7 +7,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import DirectionsIcon from '@mui/icons-material/Directions';
 import { Card, CardMedia, Box, Typography, Button } from "@mui/material";
-
+import Header from '../components/Header.jsx'
 
 
 export default function Pedidos() {
