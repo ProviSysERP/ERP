@@ -280,6 +280,7 @@ return (
           borderRadius: 3,
           overflow: "hidden",
           boxShadow: "0 12px 40px rgba(3,18,26,0.12)",
+          
         }}
       >
         <CardContent>
@@ -312,7 +313,12 @@ return (
                   }}
                 >
                   {p.categories?.map((cat, i) => (
-                    <Chip key={i} label={cat} size="small" color="primary" />
+                    <Chip
+                      key={i}
+                      label={cat.charAt(0).toUpperCase() + cat.slice(1).toLowerCase()}
+                      size="small"
+                      color="primary"
+                    />
                   ))}
                 </Box>
               </CardContent>
