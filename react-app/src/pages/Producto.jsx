@@ -171,7 +171,6 @@ return (
       sx={{
         minWidth: 900,
         flex: 2,
-        borderRadius: 3,
         display: "flex",
         flexDirection: { xs: "column", md: "row" },
         borderRadius: 3,
