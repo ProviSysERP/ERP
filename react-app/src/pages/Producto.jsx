@@ -157,7 +157,7 @@ export default function Producto() {
 
 return (
   <Container sx={{py: { xs: 3, md: 6 } }}>
-
+  <Header/>
     <Box
     sx={{
       display: "flex",

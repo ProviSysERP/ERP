@@ -93,10 +93,10 @@ export default function Perfil() {
 
   return (
     <Container sx={{ py: 4 }}>
+        <Header/>
       <Button component={Link} to="/contactos" variant="outlined" sx={{ mb: 3 }}>
         ← Volver
       </Button>
-
       <Button
         variant="contained"
         color="error"

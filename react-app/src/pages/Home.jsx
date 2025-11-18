@@ -9,6 +9,7 @@ import Header from '../components/Header.jsx'
 const Home = () => {
     return (
         <Container>
+            <Header/>
             <Novedades/>
             <Container>
                 <h1>PROVEEDORES</h1>

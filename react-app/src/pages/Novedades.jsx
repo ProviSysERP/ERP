@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";   
 import React from "react";
 import Slider from "react-slick";
-import { Card, CardMedia, Box, Typography, Button } from "@mui/material";
+import { Card, CardMedia, Box, Typography, Button, Container } from "@mui/material";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./Novedades.css";
