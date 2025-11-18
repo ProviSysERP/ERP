@@ -18,6 +18,7 @@ import Home from './pages/Home.jsx'
 import CartaProveedores from './components/CartaProveedores.jsx'
 import Inventario from './pages/Inventario.jsx'
 import Pedidos from './pages/Pedidos.jsx'
+import Chat from './pages/Chat.jsx'
 
 function App() {
   return (
@@ -42,6 +43,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Perfil />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/chat"
+            element={
+              <ProtectedRoute>
+                <Chat />
               </ProtectedRoute>
             }
           />
