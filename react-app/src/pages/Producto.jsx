@@ -17,6 +17,7 @@ import {
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Header from '../components/Header.jsx'
 
 export default function Producto() {
   const { id } = useParams();
@@ -156,7 +157,7 @@ export default function Producto() {
 
 return (
   <Container sx={{py: { xs: 3, md: 6 } }}>
-
+  <Header/>
     <Box
     sx={{
       display: "flex",

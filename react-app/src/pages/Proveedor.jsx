@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Container, Typography, Card, CardContent, CardMedia, Button, CircularProgress, Alert, Box, Chip, Rating } from "@mui/material";
+import Header from '../components/Header.jsx'
 
 export default function Proveedor() {
   const { id } = useParams();
@@ -46,6 +47,7 @@ export default function Proveedor() {
 
   return (
     <Container sx={{ py: 4 }}>
+        <Header/>
       <Button component={Link} to="/proveedores" variant="outlined" sx={{ mb: 3 }}>
         ← Volver al catálogo
       </Button>
