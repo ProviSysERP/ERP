@@ -224,7 +224,7 @@ export default function PrimarySearchAppBar() {
 
           <Search>
             <SearchIconWrapper>
-              <SearchIcon />
+     
             </SearchIconWrapper>
 
             <Autocomplete
