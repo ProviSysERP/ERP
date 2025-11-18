@@ -6,7 +6,7 @@ const createWindow = () => {
         height: 900,
     });
     //win.loadFile('index.html');
-    win.loadURL('http://localhost:5173/')
+    win.loadURL('http://localhost:5173/login')
     //win.webContents.openDevTools();
 
     win.on('maximize', () => console.log('Window maximized'));
@@ -19,7 +19,7 @@ const createWindow = () => {
       label: 'Explorar',
       submenu: [
         {
-          label: 'Menu',
+          label: 'Inicio',
           click: () => {
             win.loadURL('http://localhost:5173/home');
           },
@@ -40,6 +40,18 @@ const createWindow = () => {
           label: 'Productos',
           click: () => {
             win.loadURL('http://localhost:5173/productos');
+          },
+        },
+        {
+          label: 'Inventario',
+          click: () => {
+            win.loadURL('http://localhost:5173/inventario');
+          },
+        },
+        {
+          label: 'Pedidos',
+          click: () => {
+            win.loadURL('http://localhost:5173/pedidos');
           },
         },
         { type: 'separator' },
