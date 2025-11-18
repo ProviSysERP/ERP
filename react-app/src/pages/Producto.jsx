@@ -241,7 +241,8 @@ return (
         <Box>
           <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 1 }}>
             <Chip label={`ID: ${product.id_product ?? product.id ?? product._id ?? "-"}`} />
-            {product.category && <Chip label={product.category} color="primary" />}
+            {product.category && <Chip label={product.category.charAt(0).toUpperCase() + product.category.slice(1).toLowerCase()}
+            color="primary" />}
           </Stack>
 
           <Typography variant="h4" sx={{ fontWeight: 800, mb: 1 }}>
