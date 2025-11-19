@@ -74,33 +74,44 @@ export default function ChatApp() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [selectedChat]);
 
-  const handleSendMessage = () => {
-    if (!messageInput.trim() || !selectedChat) return;
-    const newMessage = {
-      from_user: iDusuario,
-      content: messageInput,
-      timestamp: new Date().toISOString(),
-    };
+  const handleSendMessage = async () => {
+  if (!messageInput.trim() || !selectedChat) return;
+
+  const newMessage = {
+    from_user: iDusuario,
+    content: messageInput,
+  };
+
+  try {
+    const response = await fetch(
+      `http://localhost:3000/mensajes/newMessage/${selectedChat.id_conversation}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newMessage),
+      }
+    );
+
+    if (!response.ok) throw new Error('Error al enviar el mensaje');
+
+    const updatedChat = await response.json();
+
     setChats((prev) =>
       prev.map((chat) =>
         chat.id_conversation === selectedChat.id_conversation
-          ? { ...chat, mensajes: [...(chat.mensajes || []), newMessage] }
+          ? updatedChat
           : chat
       )
     );
-    setSelectedChat((prev) => ({
-      ...prev,
-      mensajes: [...(prev.mensajes || []), newMessage],
-    }));
-    setMessageInput('');
-  };
 
-  if (isLoading)
-    return (
-      <Container sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
-        <CircularProgress />
-      </Container>
-    );
+    setSelectedChat(updatedChat);
+    setMessageInput('');
+  } catch (err) {
+    console.error(err);
+  }
+};
 
   if (chats.length === 0)
     return (
@@ -168,6 +179,10 @@ export default function ChatApp() {
           flexDirection: 'column',
           marginLeft: 21,
           backgroundColor: '#f0f0f0',
+          height: '91.2vh',
+          position: "fixed",
+          bottom: 0,
+          width: "1000px"
         }}
       >
         {selectedChat ? (
