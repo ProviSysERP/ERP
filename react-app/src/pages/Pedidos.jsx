@@ -306,7 +306,7 @@ export default function Pedidos() {
         <TableContainer component={Paper} sx={{ maxHeight: 360, overflow: "auto" }}>
           <Table aria-label="collapsible table">
             <TableHead>
-              <TableRow>
+              <TableRow >
                 <TableCell />
                 <TableCell>Nombre</TableCell>
                 <TableCell align="right">Proveedor</TableCell>
@@ -315,7 +315,8 @@ export default function Pedidos() {
                 <TableCell align="right">Acciones</TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
+            <TableBody> 
+              
               {products.map((p) => (
                  <Row key={p.id || p.name} row={p} onAddToCart={handleAddToCart} />
               ))}
