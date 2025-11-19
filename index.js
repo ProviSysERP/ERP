@@ -59,6 +59,25 @@ const createWindow = () => {
       ],
     },
     {
+    label: 'Documentación',
+      submenu: [
+        {
+          label: 'Documentación Memoria',
+          click: () => {
+            win.loadURL('http://localhost:5173/home');
+          },
+        },
+        {
+          label: 'Usuarios',
+          click: () => {
+            win.loadURL('http://localhost:5173/proveedores');
+          },
+        },
+        { type: 'separator' },
+        { role: 'quit', label: 'Salir' },
+      ],
+    },
+    {
       label: 'Edit',
       submenu: [
         { label: 'About Us', click: () => console.log('About Us clicked') },
