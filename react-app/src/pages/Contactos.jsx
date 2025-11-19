@@ -52,7 +52,7 @@ export default function Novedades() {
       )}
      <Header/> 
       <Typography variant="h4" component="h2" sx={{ mb: 4, fontWeight: 'bold' }}>
-        Usuarios desde Base de Datos
+        Usuarios Hosteleros
       </Typography>
 
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: 'repeat(4, 1fr)' }, gap: 3 }}>
