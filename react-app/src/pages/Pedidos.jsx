@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import Header from "../components/Header.jsx";
 import {Avatar, Badge, Box, Button, Container,Dialog, DialogActions, DialogContent, DialogTitle, Divider, Drawer, IconButton, List, ListItem,
   ListItemAvatar, ListItemText, Paper, Snackbar, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-  TextField, Tooltip, Typography, Alert, Collapse,} from "@mui/material";
+  TextField, Tooltip, Typography, Alert, Collapse,Grid} from "@mui/material";
 import TableRowMUI from "@mui/material/TableRow";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -141,7 +141,11 @@ export default function Pedidos() {
   const [address, setAddress] = useState("");
   const [notes, setNotes] = useState("");
   const [snack, setSnack] = useState({ open: false, message: "", severity: "info" });
-
+  const [street, setStreet] = useState("");  
+  const [city, setCity] = useState("");     
+  const [stateRegion, setStateRegion] = useState("");
+  const [postalCode, setPostalCode] = useState(""); 
+  const [country, setCountry] = useState(""); 
   useEffect(() => {
     setIsLoading(true);
     fetch("http://localhost:3000/productos")
@@ -219,7 +223,12 @@ export default function Pedidos() {
       products: orderProducts,
       total_price: Math.round(cartTotal * 100) / 100,
       address: {
-        text: address,
+            address: address || "",
+            street: street || "",
+            city: city || "",
+            state: stateRegion || "",
+            postalCode: postalCode || "",
+            country: country || "",
       },
       status: "Pendiente",
       createdAt: new Date().toISOString(),
@@ -294,7 +303,7 @@ export default function Pedidos() {
           </Stack>
         </Stack>
 
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} sx={{ maxHeight: 360, overflow: "auto" }}>
           <Table aria-label="collapsible table">
             <TableHead>
               <TableRow>
@@ -411,14 +420,71 @@ export default function Pedidos() {
             <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
               Total provisional: <strong>{cartTotal.toFixed(2)} €</strong>
             </Typography>
-              <TextField
-              label="Dirección de entrega"
+
+            <TextField
+              label="Address"
               fullWidth
               margin="normal"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              placeholder="Calle, número, pisoo, ciudad..."
+              placeholder="Descripción completa (opcional si rellenas street)..."
             />
+
+            <TextField
+              label="Calle"
+              fullWidth
+              margin="normal"
+              value={street}
+              onChange={(e) => setStreet(e.target.value)}
+              placeholder="Calle, número..."
+            />
+
+            <Grid container spacing={1}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Ciudad"
+                  fullWidth
+                  margin="normal"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  placeholder="Ciudad"
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Provincia / Estado"
+                  fullWidth
+                  margin="normal"
+                  value={stateRegion}
+                  onChange={(e) => setStateRegion(e.target.value)}
+                  placeholder="Provincia / Estado"
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Código Postal"
+                  fullWidth
+                  margin="normal"
+                  value={postalCode}
+                  onChange={(e) => setPostalCode(e.target.value)}
+                  placeholder="Código Postal"
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="País"
+                  fullWidth
+                  margin="normal"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  placeholder="País"
+                />
+              </Grid>
+            </Grid>
+
             <TextField
               label="Notas (opcional)"
               fullWidth
