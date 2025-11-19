@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Header from '../components/Header.jsx';
 import { obtenerUsuario } from '../components/ObtenerUsuario.js';
 import {
@@ -12,74 +12,106 @@ import {
   Typography,
   Paper,
   Box,
+  TextField,
+  IconButton,
 } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 
-export default function ChatSelector() {
+export default function ChatApp() {
   const [isLoading, setIsLoading] = useState(true);
   const [chats, setChats] = useState([]);
   const [otherUsers, setOtherUsers] = useState({});
   const [iDusuario, setIdUsuario] = useState();
   const [selectedChat, setSelectedChat] = useState(null);
+  const [messageInput, setMessageInput] = useState('');
+  const messagesEndRef = useRef(null);
 
-  const loadChats = (usID) => {
-    fetch(`http://localhost:3000/mensajes/${usID}`)
-      .then((response) => {
-        if (!response.ok) {
-          console.log('Este usuario no tiene chats existentes.');
-          setChats([]);
-          return;
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setChats(data);
-      })
-      .catch((error) => console.error('Error al obtener mensajes:', error))
-      .finally(() => setIsLoading(false));
+  const loadChats = async (usID) => {
+    try {
+      const response = await fetch(`http://localhost:3000/mensajes/${usID}`);
+      if (!response.ok) {
+        setChats([]);
+        return;
+      }
+      const data = await response.json();
+      setChats(data);
+    } catch (err) {
+      console.error(err);
+      setChats([]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  // Get logged-in user
   useEffect(() => {
-    setIsLoading(true);
-    const fetchData = async () => {
+    const fetchUser = async () => {
       const usuario = await obtenerUsuario();
       setIdUsuario(usuario.id_user);
-      loadChats(usuario.id_user);
+      await loadChats(usuario.id_user);
     };
-    fetchData();
+    fetchUser();
   }, []);
 
   useEffect(() => {
     if (!iDusuario || chats.length === 0) return;
-
     chats.forEach((chat) => {
       const otherId = chat.user1 === iDusuario ? chat.user2 : chat.user1;
-
       if (!otherUsers[chat.id_conversation]) {
         fetch(`http://localhost:3000/usuarios/${otherId}`)
-          .then((res) => {
-            if (!res.ok) throw new Error('Usuario no encontrado');
-            return res.json();
-          })
-          .then((data) => {
+          .then((res) => res.json())
+          .then((data) =>
             setOtherUsers((prev) => ({
               ...prev,
               [chat.id_conversation]: data,
-            }));
-          })
-          .catch((err) =>
-            console.error('Error al obtener el otro usuario:', err)
-          );
+            }))
+          )
+          .catch((err) => console.error(err));
       }
     });
-  }, [iDusuario, chats, otherUsers]);
+  }, [iDusuario, chats]);
 
-  if (isLoading)
-    return (
-      <Container sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
-        <CircularProgress />
-      </Container>
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [selectedChat]);
+
+  const handleSendMessage = async () => {
+  if (!messageInput.trim() || !selectedChat) return;
+
+  const newMessage = {
+    from_user: iDusuario,
+    content: messageInput,
+  };
+
+  try {
+    const response = await fetch(
+      `http://localhost:3000/mensajes/newMessage/${selectedChat.id_conversation}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newMessage),
+      }
     );
+
+    if (!response.ok) throw new Error('Error al enviar el mensaje');
+
+    const updatedChat = await response.json();
+
+    setChats((prev) =>
+      prev.map((chat) =>
+        chat.id_conversation === selectedChat.id_conversation
+          ? updatedChat
+          : chat
+      )
+    );
+
+    setSelectedChat(updatedChat);
+    setMessageInput('');
+  } catch (err) {
+    console.error(err);
+  }
+};
 
   if (chats.length === 0)
     return (
@@ -95,38 +127,43 @@ export default function ChatSelector() {
     <Box sx={{ display: 'flex', height: '100vh' }}>
       {/* Sidebar */}
       <Paper
-        elevation={3}
         sx={{
           width: 360,
+          flexShrink: 0,
           borderRight: '1px solid #ddd',
           display: 'flex',
           flexDirection: 'column',
           position: 'fixed',
+          height: '100vh',
+          top: 0,
           left: 0,
-          minHeight: '100vh',
+          minWidth: 360,
         }}
       >
         <Header />
         <List sx={{ flex: 1, overflowY: 'auto' }}>
           {chats.map((chat) => {
             const otherUser = otherUsers[chat.id_conversation];
-
             return (
               <ListItem
                 button
                 key={chat.id_conversation}
                 selected={selectedChat?.id_conversation === chat.id_conversation}
-                onClick={() => setSelectedChat(chat)}
+                onClick={() =>
+                  setSelectedChat(chats.find((c) => c.id_conversation === chat.id_conversation))
+                }
               >
                 <ListItemAvatar>
                   <Avatar
-                    src={otherUser?.profilePicture || ''}
+                    src={otherUser?.profile_picture || ''}
                     alt={otherUser?.name || 'Usuario'}
                   />
                 </ListItemAvatar>
                 <ListItemText
                   primary={otherUser?.name || 'Cargando...'}
-                  secondary={chat.lastMessage || ''}
+                  secondary={
+                    chat.mensajes?.[chat.mensajes.length - 1]?.content || ''
+                  }
                 />
               </ListItem>
             );
@@ -134,23 +171,96 @@ export default function ChatSelector() {
         </List>
       </Paper>
 
+      {/* Chat window */}
       <Box
         sx={{
           flex: 1,
           display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
+          flexDirection: 'column',
+          marginLeft: 21,
+          backgroundColor: '#f0f0f0',
+          height: '91.2vh',
+          position: "fixed",
+          bottom: 0,
+          width: "1000px"
         }}
       >
         {selectedChat ? (
-          <Typography variant="h6">
-            Has seleccionado el chat con{' '}
-            {otherUsers[selectedChat.id_conversation]?.name || 'Cargando...'}
-          </Typography>
+          <>
+            {/* Chat header */}
+            <Paper elevation={1} sx={{ p: 2, borderBottom: '1px solid #ddd' }}>
+              <Typography variant="h6">
+                {otherUsers[selectedChat.id_conversation]?.name || 'Cargando...'}
+              </Typography>
+            </Paper>
+
+            {/* Messages */}
+            <Box sx={{ flex: 1, p: 2, overflowY: 'auto' }}>
+              {(selectedChat.messages || []).map((msg, idx) => (
+                <Box
+                  key={idx}
+                  sx={{
+                    display: 'flex',
+                    justifyContent:
+                      msg.from_user === iDusuario ? 'flex-end' : 'flex-start',
+                    mb: 1,
+                  }}
+                >
+                  <Paper
+                    sx={{
+                      p: 1.5,
+                      maxWidth: '70%',
+                      bgcolor: msg.from_user === iDusuario ? '#0099d1ff' : '#ffffffff',
+                    }}
+                  >
+                    <Typography variant="body1">{msg.content}</Typography>
+                    <Typography
+                      variant="caption"
+                      sx={{ display: 'block', textAlign: 'right' }}
+                    >
+                      {new Date(msg.createdAt).toLocaleString()}
+                    </Typography>
+                  </Paper>
+                </Box>
+              ))}
+              <div ref={messagesEndRef} />
+            </Box>
+
+            {/* Input */}
+            <Box
+              sx={{
+                display: 'flex',
+                p: 1,
+                borderTop: '1px solid #ddd',
+                bgcolor: '#fff',
+              }}
+            >
+              <TextField
+                fullWidth
+                variant="outlined"
+                placeholder="Escribe un mensaje..."
+                value={messageInput}
+                onChange={(e) => setMessageInput(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              />
+              <IconButton color="primary" onClick={handleSendMessage}>
+                <SendIcon />
+              </IconButton>
+            </Box>
+          </>
         ) : (
-          <Typography variant="h6" color="text.secondary">
-            Selecciona un chat para comenzar
-          </Typography>
+          <Box
+            sx={{
+              flex: 1,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Typography variant="h6" color="text.secondary">
+              Ningún chat seleccionado.
+            </Typography>
+          </Box>
         )}
       </Box>
     </Box>

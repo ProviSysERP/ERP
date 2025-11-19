@@ -4,6 +4,7 @@ import './Proveedor.css';
 import { Container, Typography, Card, CardMedia, Button, CircularProgress, Alert, Box, Chip, Rating, CardContent, CardActions } from "@mui/material";
 import Header from '../components/Header.jsx'
 
+
 export default function Proveedor() {
   const { id } = useParams();
   const [proveedor, setProveedor] = useState(null);
