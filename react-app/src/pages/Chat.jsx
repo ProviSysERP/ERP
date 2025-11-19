@@ -26,19 +26,28 @@ export default function ChatApp() {
   const [messageInput, setMessageInput] = useState('');
   const messagesEndRef = useRef(null);
 
-  const loadChats = (usID) => {
-    fetch(`http://localhost:3000/mensajes/${usID}`)
-      .then((response) => (response.ok ? response.json() : []))
-      .then((data) => setChats(data))
-      .catch((error) => console.error(error))
-      .finally(() => setIsLoading(false));
+  const loadChats = async (usID) => {
+    try {
+      const response = await fetch(`http://localhost:3000/mensajes/${usID}`);
+      if (!response.ok) {
+        setChats([]);
+        return;
+      }
+      const data = await response.json();
+      setChats(data);
+    } catch (err) {
+      console.error(err);
+      setChats([]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
     const fetchUser = async () => {
       const usuario = await obtenerUsuario();
       setIdUsuario(usuario.id_user);
-      loadChats(usuario.id_user);
+      await loadChats(usuario.id_user);
     };
     fetchUser();
   }, []);
@@ -79,6 +88,10 @@ export default function ChatApp() {
           : chat
       )
     );
+    setSelectedChat((prev) => ({
+      ...prev,
+      mensajes: [...(prev.mensajes || []), newMessage],
+    }));
     setMessageInput('');
   };
 
@@ -125,7 +138,9 @@ export default function ChatApp() {
                 button
                 key={chat.id_conversation}
                 selected={selectedChat?.id_conversation === chat.id_conversation}
-                onClick={() => setSelectedChat(chat)}
+                onClick={() =>
+                  setSelectedChat(chats.find((c) => c.id_conversation === chat.id_conversation))
+                }
               >
                 <ListItemAvatar>
                   <Avatar
@@ -166,7 +181,7 @@ export default function ChatApp() {
 
             {/* Messages */}
             <Box sx={{ flex: 1, p: 2, overflowY: 'auto' }}>
-              {(selectedChat.mensajes || []).map((msg, idx) => (
+              {(selectedChat.messages || []).map((msg, idx) => (
                 <Box
                   key={idx}
                   sx={{
@@ -180,7 +195,7 @@ export default function ChatApp() {
                     sx={{
                       p: 1.5,
                       maxWidth: '70%',
-                      bgcolor: msg.from_user === iDusuario ? '#dcf8c6' : '#fff',
+                      bgcolor: msg.from_user === iDusuario ? '#0099d1ff' : '#ffffffff',
                     }}
                   >
                     <Typography variant="body1">{msg.content}</Typography>
@@ -188,7 +203,7 @@ export default function ChatApp() {
                       variant="caption"
                       sx={{ display: 'block', textAlign: 'right' }}
                     >
-                      {new Date(msg.timestamp).toLocaleTimeString()}
+                      {new Date(msg.createdAt).toLocaleString()}
                     </Typography>
                   </Paper>
                 </Box>
@@ -228,7 +243,7 @@ export default function ChatApp() {
             }}
           >
             <Typography variant="h6" color="text.secondary">
-              Selecciona un chat para comenzar
+              Ningún chat seleccionado.
             </Typography>
           </Box>
         )}
