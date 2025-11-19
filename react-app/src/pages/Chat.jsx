@@ -7,7 +7,6 @@ import { Container, CircularProgress } from '@mui/material';
 
 export default function Chat() {
 
-    const [usID, setUsId] = useState();
     const [hasChats, setHasChats] = useState();
     const [isLoading, setIsLoading] = useState(true);
     const [chats, setChats] = useState([]);
@@ -33,11 +32,15 @@ export default function Chat() {
 
     useEffect(() => {
         setIsLoading(true);
-        const usuario = obtenerUsuario();
-        console.log(usuario);
-        setUsId(usuario.id_user);
-        setTimeout(load(usID), 2000);
+        const fetchData = async () => {
 
+        const usuario = await obtenerUsuario();
+        console.log(usuario);
+
+        load(usuario.id_user)
+        };
+
+        fetchData();
     }, []);
 
     if (isLoading)
