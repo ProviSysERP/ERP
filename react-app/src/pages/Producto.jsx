@@ -261,7 +261,7 @@ return (
         </Box>
 
         <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
-          <Button variant="contained" size="large">Añadir al carrito</Button>
+          <Button variant="contained" size="large" link component={RouterLink} to="/pedidos">Ir a pedidos</Button>
           <Button component={RouterLink} to="/productos" variant="outlined">
             Volver
           </Button>
