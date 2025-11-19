@@ -24,6 +24,7 @@ export default function Chat() {
         })
         .then((data) => {
             setChats(data);
+            setHasChats(true);
             console.log(data);
         }
         ).catch((error) => console.error('Error al obtener mensajes:', error))
@@ -50,5 +51,22 @@ export default function Chat() {
       </Container>
     );
 
+    if(!hasChats) {
+        return (
+            <Container sx={{ py: 4 }}>
+                <Header/>
+                <h2>No tienes chats existentes. ¡Crea uno!</h2>
+            </Container>
+        );
+    }
+
+    if(hasChats) {
+        return (
+            <Container sx={{ py: 4 }}>
+                <Header/>
+                <h2>Tus Chats</h2>
+            </Container>
+        );
+    }
 
 }
