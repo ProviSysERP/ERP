@@ -14,8 +14,13 @@ import {
   Box,
   TextField,
   IconButton,
+  Button,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function ChatApp() {
   const [isLoading, setIsLoading] = useState(true);
@@ -24,7 +29,13 @@ export default function ChatApp() {
   const [iDusuario, setIdUsuario] = useState();
   const [selectedChat, setSelectedChat] = useState(null);
   const [messageInput, setMessageInput] = useState('');
+  const [allUsers, setAllUsers] = useState([]);
+  const [anchorEl, setAnchorEl] = useState(null);
   const messagesEndRef = useRef(null);
+
+  const openMenu = Boolean(anchorEl);
+  const handleOpenMenu = (event) => setAnchorEl(event.currentTarget);
+  const handleCloseMenu = () => setAnchorEl(null);
 
   const loadChats = async (usID) => {
     try {
@@ -43,11 +54,51 @@ export default function ChatApp() {
     }
   };
 
+  const handleNewChat = async (user) => {
+    handleCloseMenu();
+    const existing = chats.find(
+      (c) =>
+        (c.user1 === iDusuario && c.user2 === user.id_user) ||
+        (c.user2 === iDusuario && c.user1 === user.id_user)
+    );
+    if (existing) return setSelectedChat(existing);
+
+    // Create new chat
+    try {
+      const res = await fetch('http://localhost:3000/mensajes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user1: iDusuario, user2: user.id_user }),
+      });
+      const newChat = await res.json();
+      setChats((prev) => [...prev, newChat]);
+      setSelectedChat(newChat);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const deleteChat = async (chatId) => {
+    try {
+      const response = await fetch(`http://localhost:3000/mensajes/${chatId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Error al eliminar el chat');
+        setChats((prev) => prev.filter((chat) => chat.id_conversation !== chatId));
+        setSelectedChat(null);
+    } catch (err) {
+      console.error(err);
+    }
+    };
+
   useEffect(() => {
     const fetchUser = async () => {
       const usuario = await obtenerUsuario();
       setIdUsuario(usuario.id_user);
       await loadChats(usuario.id_user);
+      const res = await fetch('http://localhost:3000/usuarios');
+      const users = await res.json();
+      setAllUsers(users.filter(u => u.id_user !== usuario.id_user));
     };
     fetchUser();
   }, []);
@@ -124,7 +175,7 @@ export default function ChatApp() {
     );
 
   return (
-    <Box sx={{ display: 'flex', height: '100vh' }}>
+    <Box sx={{ display: 'flex'}}>
       {/* Sidebar */}
       <Paper
         sx={{
@@ -134,14 +185,14 @@ export default function ChatApp() {
           display: 'flex',
           flexDirection: 'column',
           position: 'fixed',
-          height: '100vh',
+          height: "100vh",
           top: 0,
           left: 0,
           minWidth: 360,
         }}
       >
         <Header />
-        <List sx={{ flex: 1, overflowY: 'auto' }}>
+        <List sx={{ flex: 32, overflowY: 'auto' }}>
           {chats.map((chat) => {
             const otherUser = otherUsers[chat.id_conversation];
             return (
@@ -263,6 +314,49 @@ export default function ChatApp() {
           </Box>
         )}
       </Box>
+
+    <Button sx={{
+        position: 'fixed',
+        bottom: 80,
+        right: 10,
+        outlineWidth: "10px",
+    }} 
+    variant="outlined" startIcon={<DeleteIcon />} onClick={() => {
+        const confirmed = window.confirm("¿Seguro que quieres borrar este chat?");
+        if (confirmed) deleteChat(selectedChat.id_conversation);
+    }}
+    >
+        Borrar Chat</Button>
+
+      <Button
+          startIcon={<AddIcon />}
+          variant= 'outlined'
+          onClick={(e) => setAnchorEl(e.currentTarget)}
+          sx={{ m: 1, position: 'fixed', bottom: 16, right: 8, outlineWidth: "10px", outlineColor: "#1976d2" }}
+        >
+          Nuevo Chat
+        </Button>
+
+        <Menu
+    anchorEl={anchorEl}
+    open={Boolean(anchorEl)}
+    onClose={() => setAnchorEl(null)}
+    >
+    {allUsers.map((user) => (
+        <MenuItem
+        key={user.id_user}
+        onClick={() => {
+        handleNewChat(user);
+        setAnchorEl(null);
+    }}
+        >
+        <ListItemAvatar>
+            <Avatar src={user.profile_picture || ''} />
+        </ListItemAvatar>
+        <ListItemText primary={user.name} />
+        </MenuItem>
+    ))}
+</Menu>
     </Box>
   );
 }
