@@ -171,6 +171,34 @@ export default function ChatApp() {
         <Typography variant="h6">
           No tienes chats existentes. ¡Crea uno!
         </Typography>
+        <Button
+          startIcon={<AddIcon />}
+          variant= 'outlined'
+          onClick={(e) => setAnchorEl(e.currentTarget)}
+          sx={{ m: 1, position: 'fixed', bottom: 16, right: 8, outlineWidth: "10px", outlineColor: "#1976d2" }}
+        >
+          Nuevo Chat
+        </Button>
+            <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={() => setAnchorEl(null)}
+            >
+            {allUsers.map((user) => (
+                <MenuItem
+                key={user.id_user}
+                onClick={() => {
+                handleNewChat(user);
+                setAnchorEl(null);
+            }}
+                >
+                <ListItemAvatar>
+                <Avatar src={user.profile_picture || ''} />
+                </ListItemAvatar>
+                <ListItemText primary={user.name} />
+                </MenuItem>
+            ))}
+        </Menu>
       </Container>
     );
 

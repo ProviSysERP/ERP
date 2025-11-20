@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import './Proveedor.css';
-import { Container, Typography, Card, CardMedia, Button, CircularProgress, Alert, Box, Chip, Rating, CardContent, CardActions } from "@mui/material";
+import { Container, Typography, Card, CardMedia, Button, CircularProgress, Alert, Box, Chip, Rating, CardContent, CardActions, TextField, Stack } from "@mui/material";
 import Header from '../components/Header.jsx'
 
 
@@ -13,6 +13,27 @@ export default function Proveedor() {
   const [openReseñas, setOpenReseñas] = useState(false);
   const [openProductos, setOpenProductos] = useState(false);
   const [products, setProducts] = useState([]);
+  const [userId, setUserId] = useState(null);
+  const [userName, setUserName] = useState(null); // <-- nombre del usuario logueado
+  const [nuevoComentario, setNuevoComentario] = useState("");
+  const [nuevaPuntuacion, setNuevaPuntuacion] = useState(0);
+  const [loadingPost, setLoadingPost] = useState(false);
+
+  useEffect(() => {
+    fetch("http://localhost:3000/usuarios/me", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.id_user) {
+          setUserId(data.id_user);
+          setUserName(data.name || "Anónimo");
+        }
+      })
+      .catch(() => setUserId(null));
+  }, []);
 
   useEffect(() => {
     setIsLoading(true);
@@ -35,6 +56,33 @@ export default function Proveedor() {
       .catch((err) => setError(err.message))
       .finally(() => setIsLoading(false));
   }, [id]);
+
+  const enviarReseña = () => {
+    if (!nuevoComentario || !nuevaPuntuacion || !userId) return;
+
+    setLoadingPost(true);
+    fetch(`http://localhost:3000/proveedores/${proveedor.id_provider}/rating`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId,
+        score: nuevaPuntuacion,
+        comment: nuevoComentario
+      })
+    })
+      .then(res => res.json())
+      .then(data => {
+        setProveedor(prev => ({
+          ...prev,
+          rating: [...(prev.rating || []), { ...data, author: userName }]
+        }));
+
+        setNuevoComentario("");
+        setNuevaPuntuacion(0);
+      })
+      .catch(err => console.error("Error al agregar reseña:", err))
+      .finally(() => setLoadingPost(false));
+  };
 
   if (isLoading)
     return (
@@ -59,7 +107,7 @@ export default function Proveedor() {
 
   return (
     <Container sx={{ py: 4 }}>
-        <Header/>
+      <Header/>
       <Button component={Link} to="/proveedores" variant="outlined" sx={{ mb: 3 }}>
         ← Volver al catálogo
       </Button>
@@ -232,7 +280,40 @@ export default function Proveedor() {
         </Box>
 
         {/*lo que se ve al expandirse las reseñas*/}
-        <Box sx={{ p: 2, overflowY: "auto", height: openReseñas ? "auto" : 0 }}>
+        <Box sx={{ p: 2, height: openReseñas ? "auto" : 0, maxHeight: 450, overflowY: "auto" }}>
+          
+          {userId && (
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle1" sx={{ mb: 1 }}>Añadir una reseña:</Typography>
+              <Stack spacing={1}>
+                <Rating
+                  name="new-rating"
+                  value={nuevaPuntuacion}
+                  precision={1}
+                  onChange={(event, newValue) => setNuevaPuntuacion(newValue)}
+                />
+                <TextField
+                  fullWidth
+                  multiline
+                  rows={2}
+                  placeholder="Escribe tu comentario..."
+                  value={nuevoComentario}
+                  onChange={(e) => setNuevoComentario(e.target.value)}
+                />
+                <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                  <Button
+                    size="small"
+                    variant="contained"
+                    onClick={enviarReseña}
+                    disabled={loadingPost || nuevaPuntuacion === 0 || !nuevoComentario}
+                  >
+                    {loadingPost ? "Enviando..." : "Enviar"}
+                  </Button>
+                </Box>
+              </Stack>
+            </Box>
+          )}
+
           {Array.isArray(proveedor.rating) && proveedor.rating.length > 0 ? (
             <ul style={{ paddingLeft: 18 }}>
               {proveedor.rating.map((r, idx) => (
