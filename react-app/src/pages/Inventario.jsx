@@ -13,6 +13,7 @@ export default function Productos() {
   const [busqueda, setBusqueda] = useState("");
   const [idUsuario, setIdUsuario] = useState(null);
   const [updatingStock, setUpdatingStock] = useState({});
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -80,7 +81,12 @@ export default function Productos() {
         body: JSON.stringify({ id_user: idUsuario, newStock })
       });
 
-      if (!res.ok) throw new Error("No se pudo actualizar el stock");
+      if (!res.ok) { 
+        throw new Error("No se pudo actualizar el stock")
+      } else {
+        setSuccess(true);
+        setTimeout(setSuccess, 2000);
+      }
 
     } catch (err) {
       setError(err.message);
@@ -111,6 +117,12 @@ export default function Productos() {
       {error && (
         <Alert severity="error" sx={{ mb: 2, ml: "340px" }}>
           Error: {error}
+        </Alert>
+      )}
+
+      {success && (
+        <Alert severity="success" sx={{mb: 2, ml: "340px"}}>
+          ¡Cambios a este producto guardados!
         </Alert>
       )}
 
