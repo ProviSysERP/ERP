@@ -33,6 +33,18 @@ export default function Productos() {
 
       try {
         const invRes = await fetch(`http://localhost:3000/inventario/${idUsuario}`);
+
+        if (invRes.status === 404) {
+          const createRes = await fetch(`http://localhost:3000/inventario/create/${idUsuario}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" }
+          });
+          if (!createRes.ok) throw new Error("No se pudo crear el inventario");
+          setProducts([]);
+          setError(null);
+          return;
+        }
+
         if (!invRes.ok) throw new Error("Error al cargar inventario");
 
         const inventario = await invRes.json();
@@ -222,7 +234,7 @@ const handleRemoveProduct = async (id_product) => {
           <Typography variant="h4" sx={{ mb: 4, fontWeight: "bold", textAlign: "center" }}>
             Inventario Actual
           </Typography>
-            <Button variant="contained" color="secondary" onClick={handleOpenAddDialog} sx={{ position: "fixed", right:30, top:80, zIndex:9999 }}>
+            <Button variant="contained" color="secondary" onClick={handleOpenAddDialog} sx={{ position: "fixed", right:30, top:120, zIndex:9999 }}>
               Añadir productos
             </Button>
           <Dialog open={openAddDialog} onClose={() => setOpenAddDialog(false)} fullWidth maxWidth="sm">
