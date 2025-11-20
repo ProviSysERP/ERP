@@ -14,8 +14,11 @@ import {
   Paper,
 } from "@mui/material";
 import { Mail, Lock } from "lucide-react";
+import { useAuth } from "../components/useAuth";
+
 
 export default function Login() {
+  const { login } = useAuth();
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [mensaje, setMensaje] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -36,35 +39,16 @@ export default function Login() {
 
     setLoading(true);
 
-    try {
-      const response = await fetch("http://localhost:3000/Login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: formData.username,
-          password: formData.password,
-        }),
-      });
+    const result = await login(formData.username, formData.password);
 
-      if (response.ok) {
-        const data = await response.json();
-        const { access_token, token_type } = data;
-
-        // Guardar tokens
-        localStorage.setItem("token", access_token);
-        localStorage.setItem("token_type", token_type);
-
-        setMensaje("¡Bienvenido!");
-        navigate("/home");
-      } else {
-        setMensaje("Usuario o contraseña incorrectos");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      setMensaje("Error al conectar con el servidor.");
-    } finally {
-      setLoading(false);
+    if (result.ok) {
+      setMensaje("¡Bienvenido!");
+      navigate("/home");
+    } else {
+      setMensaje(result.error);
     }
+
+    setLoading(false);
   };
 
   return (
