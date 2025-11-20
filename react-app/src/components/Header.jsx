@@ -95,6 +95,9 @@ export default function PrimarySearchAppBar() {
     { label: 'Historial de Pedidos', path: '/historialpedidos' },
     { label: 'Proveedores', path: '/proveedores' },
     { label: 'Productos', path: '/productos' },
+    { label: 'Panel de Administrador', path: '/adminpanel' },
+    { label: 'Inventario', path: '/inventario' },
+
   ];
 
   const navigateTo = (path) => {
