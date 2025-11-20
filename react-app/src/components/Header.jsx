@@ -17,9 +17,12 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 import LocalGroceryStoreTwoToneIcon from '@mui/icons-material/LocalGroceryStoreTwoTone';
-
+import { obtenerUsuario } from './ObtenerUsuario';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -53,6 +56,16 @@ export default function PrimarySearchAppBar() {
 
   const [inputValue, setInputValue] = React.useState('');
   const [value, setValue] = React.useState(null);
+
+  const [idUsuario, setIdUsuario] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const usuario = await obtenerUsuario();
+      setIdUsuario(usuario.id_user);
+    };
+    fetchUser();
+  }, []);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -136,8 +149,8 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem component={Link} to={`/perfil/${idUsuario}`}>Perfil</MenuItem>
+      <MenuItem component={Link} to={`/login`}>Salir</MenuItem>
     </Menu>
   );
 
