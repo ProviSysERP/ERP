@@ -7,6 +7,8 @@ import "slick-carousel/slick/slick-theme.css";
 import "./Novedades.css";
 import { Link } from 'react-router-dom';
 import Header from '../components/Header.jsx'
+import { fetchWithRefresh } from "../components/fetchWithRefresh";
+
 
 const slides = [];
 
@@ -16,18 +18,31 @@ export default function PromoCarousel() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsLoading(true);
-    fetch("http://localhost:3000/posts")
-      .then((response) => {
+    const cargarPosts = async () => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const response = await fetchWithRefresh("http://localhost:3000/posts");
+
+        if (response.error === "unauthorized") {
+          setError("No autorizado. Por favor, haz login nuevamente.");
+          return;
+        }
+
         if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-        return response.json();
-      })
-      .then((jsonData) => {
-        setProducts(jsonData);
-        setError(null);
-      })
-      .catch((error) => setError(error.message))
-      .finally(() => setIsLoading(false));
+
+        const data = await response.json();
+        setProducts(data);
+
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    cargarPosts();
   }, []);
 
   const settings = {

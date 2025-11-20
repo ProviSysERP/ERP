@@ -1,29 +1,12 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { obtenerUsuario } from "../components/ObtenerUsuario.js";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "./useAuth";
 
 export default function ProtectedRoute({ children }) {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { user, loading } = useAuth();
 
-  useEffect(() => {
-    const verificarUsuario = async () => {
-      const usuario = await obtenerUsuario();
-      if (usuario) {
-        setIsAuthenticated(true);
-      } else {
-        setIsAuthenticated(false);
-        localStorage.removeItem("token");
-        navigate("/login");
-      }
-      setLoading(false);
-    };
+  if (loading) return <p>Cargando...</p>;
 
-    verificarUsuario();
-  }, [navigate]);
+  if (!user) return <Navigate to="/login" replace />;
 
-  if (loading) return <div>Cargando...</div>;
-
-  return isAuthenticated ? children : null;
+  return children;
 }
