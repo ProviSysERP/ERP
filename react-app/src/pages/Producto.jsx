@@ -136,7 +136,7 @@ export default function Producto() {
           }}
         >
           {/* SLIDER */}
-          <Box sx={{ width: { xs: "100%", md: "48%" }, height: "100%", minWidth: 500, overflow: "hidden" }}>
+          <Box sx={{ width: { xs: "100%", md: "48%" }, height: "100vh", minWidth: 500, overflow: "hidden", bottom: 0 }}>
             <Slider {...settings}>
               {(product.images && product.images.length ? product.images : [product.image || PLACEHOLDER]).map((img, index) => (
                 <CardMedia
@@ -144,7 +144,7 @@ export default function Producto() {
                   component="img"
                   image={resolveImage(img)}
                   alt={product.name}
-                  sx={{ width: "100%", height: 400, objectFit: "cover" }}
+                  sx={{ width: "100%", height: 410, objectFit: "cover", minHeight: 450 }}
                 />
               ))}
             </Slider>
