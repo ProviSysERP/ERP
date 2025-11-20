@@ -41,7 +41,7 @@ import { Download, Search, PlusCircle, Trash2, Edit2, Moon, Sun } from "lucide-r
 import jsPDF from "jspdf";
 
 export default function HistorialPedidos() {
-  // theme toggle
+  
   const [darkMode, setDarkMode] = useState(false);
   const theme = useMemo(
     () =>
@@ -55,7 +55,7 @@ export default function HistorialPedidos() {
 
   const isSm = useMediaQuery(theme.breakpoints.down("sm"));
 
-  // data + ui state
+  
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -64,11 +64,11 @@ export default function HistorialPedidos() {
   const [createOpen, setCreateOpen] = useState(false);
   const [snack, setSnack] = useState({ open: false, severity: "success", message: "" });
 
-  // pagination
+  
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  // form for create & edit (shared)
+  
   const emptyForm = {
     id_delivery: "",
     id_provider: "",
@@ -81,7 +81,6 @@ export default function HistorialPedidos() {
   const [form, setForm] = useState(emptyForm);
   const [isEditing, setIsEditing] = useState(false);
 
-  // fetch orders
   async function fetchOrders() {
     try {
       setLoading(true);
@@ -100,7 +99,7 @@ export default function HistorialPedidos() {
     fetchOrders();
   }, []);
 
-  // derived filtered list
+  
   const filtered = useMemo(() => {
     const s = String(search || "").toLowerCase();
     return orders.filter((o) => {
@@ -183,8 +182,7 @@ export default function HistorialPedidos() {
         const res = await fetch('http://localhost:3000/pedidos', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
         if (res.status !== 201 && !res.ok) { const err = await res.json(); throw new Error(err.error || 'create failed'); }
         const created = await res.json();
-        // backend might return object with insertedId or full object
-        // prefer to refetch to ensure consistency
+
         await fetchOrders();
         setSnack({ open: true, severity: 'success', message: 'Pedido creado' });
       }
@@ -212,7 +210,7 @@ export default function HistorialPedidos() {
   const removeProductRow = (i) => setForm(f => ({ ...f, products: f.products.filter((_,idx)=>idx!==i) }));
   const updateProductField = (i, field, value) => setForm(f => ({ ...f, products: f.products.map((p,idx)=> idx===i ? { ...p, [field]: value } : p) }));
 
-  // small mapping for Chip colors
+  
   const chipColor = (status) => {
     switch (status) {
       case 'En transito': return 'info';
@@ -222,7 +220,7 @@ export default function HistorialPedidos() {
     }
   };
 
-  // pagination slice
+ 
   const visible = filtered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
@@ -237,11 +235,6 @@ export default function HistorialPedidos() {
             </Box>
             <Box display="flex" alignItems="center" gap={1}>
               <IconButton color="inherit" onClick={handleDownloadPDF}><Download /></IconButton>
-              <Box display="flex" alignItems="center" gap={1}>
-                <Sun size={16} />
-                <Switch checked={darkMode} onChange={() => setDarkMode(d => !d)} />
-                <Moon size={16} />
-              </Box>
             </Box>
           </Toolbar>
         </AppBar>
@@ -249,7 +242,6 @@ export default function HistorialPedidos() {
         <Box p={isSm ? 2 : 4}>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
             <Typography variant="h5">Panel de pedidos</Typography>
-            <Button variant="contained" startIcon={<PlusCircle />} onClick={openCreate}>Nuevo pedido</Button>
           </Box>
 
           <Card sx={{ mb: 2 }}>
