@@ -227,7 +227,7 @@ export default function Productos() {
                       variant="contained"
                       color="primary"
                       onClick={() =>
-                        handleSaveStock(product.id_product, product.stock)
+                        saveStock(product.id_product, product.stock)
                       }
                     >
                       Guardar Cambios
