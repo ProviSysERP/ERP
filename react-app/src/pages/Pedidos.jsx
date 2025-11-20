@@ -304,7 +304,7 @@ export default function Pedidos() {
         </Stack>
 
         <TableContainer component={Paper} sx={{ maxHeight: 360, overflow: "auto" }}>
-          <Table aria-label="collapsible table">
+          <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow >
                 <TableCell />

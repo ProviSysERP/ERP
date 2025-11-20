@@ -131,7 +131,6 @@ export default function CartaProveedores() {
                     }}
                   />
 
-                  {/* Contenedor inferior: título + chips */}
                   <Box sx={{ p: 1, pb: 3 }}>
                     <Typography
                       variant="subtitle1"
