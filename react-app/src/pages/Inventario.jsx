@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
-import { Typography, Container, Box, CircularProgress, Alert, Button, CardMedia, CardContent, CardActions, Card, TextField } from '@mui/material';
+import { Typography, Container, Box, CircularProgress, Alert, Button, CardMedia, CardContent, CardActions, Card, TextField, Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemText, ListItemAvatar, Avatar, Paper } from '@mui/material';
 import Header from '../components/Header.jsx';
 import '../pages/Productos.css';
 import { obtenerUsuario } from "../components/ObtenerUsuario.js";
@@ -13,6 +13,9 @@ export default function Productos() {
   const [busqueda, setBusqueda] = useState("");
   const [idUsuario, setIdUsuario] = useState(null);
   const [updatingStock, setUpdatingStock] = useState({});
+  const [success, setSuccess] = useState(false);
+  const [allProducts, setAllProducts] = useState([]);
+  const [openAddDialog, setOpenAddDialog] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -80,7 +83,12 @@ export default function Productos() {
         body: JSON.stringify({ id_user: idUsuario, newStock })
       });
 
-      if (!res.ok) throw new Error("No se pudo actualizar el stock");
+      if (!res.ok) { 
+        throw new Error("No se pudo actualizar el stock")
+      } else {
+        setSuccess(true);
+        setTimeout(setSuccess, 2000);
+      }
 
     } catch (err) {
       setError(err.message);
@@ -97,6 +105,62 @@ export default function Productos() {
     return coincideBusqueda && coincideCategoria;
   });
 
+  const handleOpenAddDialog = async () => {
+  try {
+    const res = await fetch("http://localhost:3000/productos");
+    if (!res.ok) throw new Error("No se pudo cargar la lista de productos");
+    const productosDB = await res.json();
+
+    const productosFaltantes = productosDB.filter(
+      (pDB) => !products.some((pInv) => pInv.id_product === pDB.id_product)
+    );
+
+    setAllProducts(productosFaltantes);
+    setOpenAddDialog(true);
+  } catch (err) {
+    setError(err.message);
+  }
+};
+
+const handleAddProduct = async (product) => {
+  try {
+    const res = await fetch(`http://localhost:3000/inventario/addProduct/${idUsuario}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id_product: product.id_product, stock: 0, unit_price: product.price })
+    });
+
+    if (!res.ok) throw new Error("No se pudo añadir el producto");
+
+    setProducts((prev) => [...prev, { ...product, stock: 0, unit_price: product.price, lastRestocked: new Date() }]);
+    setOpenAddDialog(false);
+    setSuccess(true);
+    setTimeout(() => setSuccess(false), 2000);
+
+  } catch (err) {
+    setError(err.message);
+  }
+};
+
+const handleRemoveProduct = async (id_product) => {
+  try {
+    const res = await fetch(`http://localhost:3000/inventario/removeProduct/${idUsuario}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id_product })
+    });
+
+    if (!res.ok) throw new Error("No se pudo eliminar el producto");
+
+    setProducts((prev) => prev.filter((p) => p.id_product !== id_product));
+    setSuccess(true);
+    setTimeout(() => setSuccess(false), 2000);
+
+  } catch (err) {
+    setError(err.message);
+  }
+};
+
   if (isLoading) {
     return (
       <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 8 }}>
@@ -111,6 +175,12 @@ export default function Productos() {
       {error && (
         <Alert severity="error" sx={{ mb: 2, ml: "340px" }}>
           Error: {error}
+        </Alert>
+      )}
+
+      {success && (
+        <Alert severity="success" sx={{mb: 2, ml: "340px"}}>
+          ¡Cambios a este producto guardados!
         </Alert>
       )}
 
@@ -148,12 +218,42 @@ export default function Productos() {
           </Box>
         </Box>
 
-        <Box sx={{ flex: 1, ml: "200px", p: 4 }}>
+        <Box elevation={10} sx={{ flex: 1, ml: "200px", p: 4 }}>
           <Typography variant="h4" sx={{ mb: 4, fontWeight: "bold", textAlign: "center" }}>
             Inventario Actual
           </Typography>
+            <Button variant="contained" color="secondary" onClick={handleOpenAddDialog} sx={{ position: "fixed", right:30, top:80, zIndex:9999 }}>
+              Añadir productos
+            </Button>
+          <Dialog open={openAddDialog} onClose={() => setOpenAddDialog(false)} fullWidth maxWidth="sm">
+            <DialogTitle>Productos disponibles para añadir</DialogTitle>
+            <DialogContent>
+              {allProducts.length === 0 ? (
+                <Typography>No hay productos disponibles para añadir.</Typography>
+              ) : (
+                <List>
+                  {allProducts.map((product) => (
+                    <ListItem key={product.id_product} button onClick={() => handleAddProduct(product)}>
+                      <ListItemAvatar>
+                        <Avatar
+                          src={(product.images?.length ? product.images[0] : product.image) || '/placeholder.jpg'}
+                          alt={product.name}
+                          variant="square"
+                          sx={{ width: 56, height: 56, mr: 2 }}
+                        />
+                        </ListItemAvatar>
+                      <ListItemText primary={product.name} secondary={`Precio: ${product.price}`} />
+                    </ListItem>
+                  ))}
+                </List>
+              )}
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setOpenAddDialog(false)}>Cerrar</Button>
+            </DialogActions>
+          </Dialog>
 
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: 'repeat(4, 1fr)' }, gap: 3 }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: 'repeat(3, 1fr)' }, gap: 3 }}>
             {productosFiltrados.length > 0 ? (
               productosFiltrados.map((product) => (
                 <Card key={product.id_product} sx={{ maxWidth: 300, minWidth: 300, height: "100%", display: "flex", flexDirection: "column" }}>
@@ -172,7 +272,7 @@ export default function Productos() {
                       Precio: {product.price}
                     </Typography>
 
-                    <Box sx={{ display: "flex", alignItems: "center", mt: 1, mb: 1 }}>
+                    <Box sx={{ display: "flex", alignItems: "center", ml: 9, mt: 1, mb: 1 }}>
                       <Button
                         variant="outlined"
                         onClick={() =>
@@ -227,7 +327,7 @@ export default function Productos() {
                       variant="contained"
                       color="primary"
                       onClick={() =>
-                        handleSaveStock(product.id_product, product.stock)
+                        saveStock(product.id_product, product.stock)
                       }
                     >
                       Guardar Cambios
@@ -240,6 +340,14 @@ export default function Productos() {
                       fullWidth
                     >
                       Más Info
+                    </Button>
+                    <Button
+                      fullWidth
+                      variant="outlined"
+                      color="error"
+                      onClick={() => handleRemoveProduct(product.id_product)}
+                    >
+                      Eliminar del inventario
                     </Button>
                   </CardActions>
                 </Card>
