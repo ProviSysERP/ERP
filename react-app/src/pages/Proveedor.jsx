@@ -4,7 +4,6 @@ import './Proveedor.css';
 import { Container, Typography, Card, CardMedia, Button, CircularProgress, Alert, Box, Chip, Rating, CardContent, CardActions, TextField, Stack } from "@mui/material";
 import Header from '../components/Header.jsx'
 
-
 export default function Proveedor() {
   const { id } = useParams();
   const [proveedor, setProveedor] = useState(null);
@@ -14,10 +13,21 @@ export default function Proveedor() {
   const [openProductos, setOpenProductos] = useState(false);
   const [products, setProducts] = useState([]);
   const [userId, setUserId] = useState(null);
-  const [userName, setUserName] = useState(null); // <-- nombre del usuario logueado
+  const [userName, setUserName] = useState(null); // nombre del usuario logueado
   const [nuevoComentario, setNuevoComentario] = useState("");
   const [nuevaPuntuacion, setNuevaPuntuacion] = useState(0);
   const [loadingPost, setLoadingPost] = useState(false);
+
+  // Mapa para traducir días de semana a español
+  const diasSemana = {
+    Mon: "Lunes",
+    Tue: "Martes",
+    Wed: "Miércoles",
+    Thu: "Jueves",
+    Fri: "Viernes",
+    Sat: "Sábado",
+    Sun: "Domingo"
+  };
 
   useEffect(() => {
     fetch("http://localhost:3000/usuarios/me", {
@@ -74,14 +84,38 @@ export default function Proveedor() {
       .then(data => {
         setProveedor(prev => ({
           ...prev,
-          rating: [...(prev.rating || []), { ...data, author: userName }]
+          rating: [
+            ...(prev.rating || []).filter(r => r.userId !== userId),
+            { ...data, author: userName, userId }
+          ]
         }));
-
         setNuevoComentario("");
         setNuevaPuntuacion(0);
       })
       .catch(err => console.error("Error al agregar reseña:", err))
       .finally(() => setLoadingPost(false));
+  };
+
+  const eliminarReseña = async (reviewUserId) => {
+    try {
+      const confirmacion = window.confirm("¿Deseas eliminar esta reseña?");
+      if (!confirmacion) return;
+
+      const response = await fetch(
+        `http://localhost:3000/proveedores/${proveedor.id_provider}/rating/${reviewUserId}`,
+        { method: "DELETE" }
+      );
+
+      if (!response.ok) throw new Error(`Error al eliminar la reseña (HTTP ${response.status})`);
+
+      setProveedor(prev => ({
+        ...prev,
+        rating: prev.rating.filter(r => r.userId !== reviewUserId)
+      }));
+    } catch (err) {
+      console.error("Error al eliminar reseña:", err);
+      alert("No se pudo eliminar la reseña.");
+    }
   };
 
   if (isLoading)
@@ -173,6 +207,13 @@ export default function Proveedor() {
             {proveedor.availability
               ? `${proveedor.availability.open} - ${proveedor.availability.close}`
               : "Desconocida"}
+          </Typography>
+
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            <strong>Días disponibles:</strong>{" "}
+            {proveedor.availability && proveedor.availability.days
+              ? proveedor.availability.days.map(d => diasSemana[d]).join(", ")
+              : "Sin datos"}
           </Typography>
         </Box>
       </Card>
@@ -295,11 +336,22 @@ export default function Proveedor() {
                 <TextField
                   fullWidth
                   multiline
-                  rows={2}
+                  minirows={1}
                   placeholder="Escribe tu comentario..."
                   value={nuevoComentario}
                   onChange={(e) => setNuevoComentario(e.target.value)}
+                  slotProps={{
+                    sx: {
+                      "& .MuiInputBase-input": {
+                      padding: "2px 8px",
+                      lineHeight: "1.4",
+                    },
+                      "&::before": { border: "none" },
+                      "&::after": { border: "none" },
+                    },
+                  }}
                 />
+
                 <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                   <Button
                     size="small"
@@ -315,15 +367,33 @@ export default function Proveedor() {
           )}
 
           {Array.isArray(proveedor.rating) && proveedor.rating.length > 0 ? (
-            <ul style={{ paddingLeft: 18 }}>
+            <Box component="ul" sx={{ p: 0, m: 0, listStyle: "none", }}>
               {proveedor.rating.map((r, idx) => (
-                <li key={idx} style={{ marginBottom: 12 }}>
-                  <Rating value={r.score} readOnly precision={1} />
-                  <div style={{ fontWeight: "bold" }}>{r.author || "Anónimo"}</div>
-                  <div>{r.comment}</div>
-                </li>
+                <Box
+                  component="li"
+                  key={idx}
+                  sx={{ mb: 1, p: 1, borderBottom: "1px solid #ddd", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}
+                >
+                  <Box>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      <Typography sx={{ fontWeight: "bold" }}>{r.author || "Anónimo"}</Typography>
+                      <Rating value={r.score} readOnly precision={1} size="small"/>
+                    </Box>
+                    <Typography>{r.comment}</Typography>
+                  </Box>
+
+                  {r.userId === userId && (
+                    <Button
+                      size="small"
+                      color="error"
+                      onClick={() => eliminarReseña(r.userId)}
+                    >
+                      Eliminar
+                    </Button>
+                  )}
+                </Box>
               ))}
-            </ul>
+            </Box>
           ) : (
             <Typography variant="body2" sx={{ color: "#666" }}>
               Aún no hay reseñas para este proveedor.
