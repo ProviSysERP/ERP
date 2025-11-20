@@ -20,7 +20,7 @@ import Inventario from './pages/Inventario.jsx'
 import Pedidos from './pages/Pedidos.jsx'
 import Chat from './pages/Chat.jsx'
 import { AuthProvider } from "./components/authContext.jsx"
-
+import AdminPanel from './pages/AdminPanel.jsx'
 
 function App() {
   return (
@@ -78,6 +78,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <Proveedor />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/adminpanel"
+            element={
+              <ProtectedRoute>
+                <AdminPanel />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/adminpanel/:id_user"
+            element={
+              <ProtectedRoute>
+                <AdminPanel />
               </ProtectedRoute>
             }
           />
