@@ -12,6 +12,7 @@ import {
   Chip,
 } from "@mui/material";
 import "./CartaProveedores.css";
+import { fetchWithRefresh } from "../components/fetchWithRefresh";
 
 export default function CartaProveedores() {
   const [proveedores, setProveedores] = useState([]);
@@ -48,21 +49,21 @@ export default function CartaProveedores() {
     setIsLoading(true);
     setError(null);
 
-    fetch(`${BASE_URL}/proveedores`)
-      .then((response) => {
-        if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-        return response.json();
-      })
-      .then((jsonData) => {
-        if (!Array.isArray(jsonData)) {
-          setProveedores([]);
-          setError("Formato de datos inválido");
-          return;
-        }
-        setProveedores(jsonData);
-      })
-      .catch((err) => setError(err.message))
-      .finally(() => setIsLoading(false));
+    const cargarProveedores = async () => {
+      try {
+        const res = await fetchWithRefresh(`${BASE_URL}/proveedores`);
+        if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
+        const data = await res.json();
+        if (!Array.isArray(data)) throw new Error("Formato de datos inválido");
+        setProveedores(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    cargarProveedores();
   }, []);
 
   if (isLoading) {

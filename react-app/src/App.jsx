@@ -19,9 +19,12 @@ import CartaProveedores from './components/CartaProveedores.jsx'
 import Inventario from './pages/Inventario.jsx'
 import Pedidos from './pages/Pedidos.jsx'
 import Chat from './pages/Chat.jsx'
+import { AuthProvider } from "./components/authContext.jsx"
+
 
 function App() {
   return (
+    <AuthProvider>
     <Box sx={{ width: '100%', minHeight: '100vh' }}>
       <Container>
         <Routes>
@@ -153,6 +156,7 @@ function App() {
         </Routes>
       </Container>
     </Box>
+    </AuthProvider>
   )
 }
 
