@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import './Proveedor.css';
 import { Container, Typography, Card, CardMedia, Button, CircularProgress, Alert, Box, Chip, Rating, CardContent, CardActions, TextField, Stack } from "@mui/material";
 import Header from '../components/Header.jsx'
+import { fetchWithRefresh } from "../components/fetchWithRefresh";
+
 
 export default function Proveedor() {
   const { id } = useParams();
@@ -30,7 +32,7 @@ export default function Proveedor() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:3000/usuarios/me", {
+    fetchWithRefresh("http://localhost:3000/usuarios/me", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`
       }
@@ -47,7 +49,7 @@ export default function Proveedor() {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(`http://localhost:3000/proveedores/${id}`)
+    fetchWithRefresh(`http://localhost:3000/proveedores/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error("Proveedor no encontrado");
         return res.json();
@@ -55,7 +57,7 @@ export default function Proveedor() {
       .then((data) => {
         setProveedor(data);
         setError(null);
-        fetch("http://localhost:3000/productos")
+        fetchWithRefresh("http://localhost:3000/productos")
           .then(res => res.json())
           .then(allProducts => {
             const provProducts = allProducts.filter(p => p.id_provider === data.id_provider);
@@ -71,7 +73,7 @@ export default function Proveedor() {
     if (!nuevoComentario || !nuevaPuntuacion || !userId) return;
 
     setLoadingPost(true);
-    fetch(`http://localhost:3000/proveedores/${proveedor.id_provider}/rating`, {
+    fetchWithRefresh(`http://localhost:3000/proveedores/${proveedor.id_provider}/rating`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -101,7 +103,7 @@ export default function Proveedor() {
       const confirmacion = window.confirm("¿Deseas eliminar esta reseña?");
       if (!confirmacion) return;
 
-      const response = await fetch(
+      const response = await fetchWithRefresh(
         `http://localhost:3000/proveedores/${proveedor.id_provider}/rating/${reviewUserId}`,
         { method: "DELETE" }
       );

@@ -14,12 +14,12 @@ import {
   Paper,
 } from "@mui/material";
 import { Mail, Lock } from "lucide-react";
-import { useAuth } from "../components/useAuth";
+import { useAuthContext } from "../components/authContext";
 
 
 export default function Login() {
-  const { login } = useAuth();
-  const [formData, setFormData] = useState({ username: "", password: "" });
+  const { login } = useAuthContext();
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [mensaje, setMensaje] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -32,14 +32,14 @@ export default function Login() {
     e.preventDefault();
     setMensaje(null);
 
-    if (!formData.username || !formData.password) {
+    if (!formData.email || !formData.password) {
       setMensaje("Por favor, rellena todos los campos");
       return;
     }
 
     setLoading(true);
 
-    const result = await login(formData.username, formData.password);
+    const result = await login(formData.email, formData.password);
 
     if (result.ok) {
       setMensaje("¡Bienvenido!");
@@ -121,10 +121,10 @@ export default function Login() {
             <form onSubmit={handleSubmit}>
               <TextField
                 label="Correo electrónico"
-                name="username"
+                name="email"
                 fullWidth
                 margin="normal"
-                value={formData.username}
+                value={formData.email}
                 onChange={handleChange}
                 variant="outlined"
                 required

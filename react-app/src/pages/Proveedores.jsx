@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import "../pages/Proveedores.css";
 import Header from '../components/Header.jsx'
 import { Typography, Box, Alert, Button, Card, CardContent, CardMedia, Chip, TextField, Container } from "@mui/material";
+import { fetchWithRefresh } from "../components/fetchWithRefresh";
+
 
 export default function Proveedores() {
   const [proveedores, setProveedores] = useState([]);
@@ -10,7 +12,7 @@ export default function Proveedores() {
   const [busqueda, setBusqueda] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:3000/proveedores")
+    fetchWithRefresh("http://localhost:3000/proveedores")
       .then((res) => res.json())
       .then((data) => setProveedores(data))
       .catch((err) => console.error("Error cargando proveedores:", err));

@@ -4,6 +4,8 @@ import { Typography, Container, Box, CircularProgress, Alert, Button, CardMedia,
 import Header from '../components/Header.jsx';
 import '../pages/Productos.css';
 import { obtenerUsuario } from "../components/ObtenerUsuario.js";
+import { fetchWithRefresh } from "../components/fetchWithRefresh";
+
 
 export default function Productos() {
   const [products, setProducts] = useState([]);
@@ -32,10 +34,10 @@ export default function Productos() {
       setIsLoading(true);
 
       try {
-        const invRes = await fetch(`http://localhost:3000/inventario/${idUsuario}`);
+        const invRes = await fetchWithRefresh(`http://localhost:3000/inventario/${idUsuario}`);
 
         if (invRes.status === 404) {
-          const createRes = await fetch(`http://localhost:3000/inventario/create/${idUsuario}`, {
+          const createRes = await fetchWithRefresh(`http://localhost:3000/inventario/create/${idUsuario}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" }
           });
@@ -50,7 +52,7 @@ export default function Productos() {
         const inventario = await invRes.json();
 
         const productPromises = inventario.products.map(async (item) => {
-          const prodRes = await fetch(`http://localhost:3000/productos/${item.id_product}`);
+          const prodRes = await fetchWithRefresh(`http://localhost:3000/productos/${item.id_product}`);
           if (!prodRes.ok) return null;
 
           const prod = await prodRes.json();
@@ -89,7 +91,7 @@ export default function Productos() {
     setUpdatingStock((prev) => ({ ...prev, [id_product]: true }));
 
     try {
-      const res = await fetch(`http://localhost:3000/inventario/modifyStock/${id_product}`, {
+      const res = await fetchWithRefresh(`http://localhost:3000/inventario/modifyStock/${id_product}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id_user: idUsuario, newStock })
@@ -119,7 +121,7 @@ export default function Productos() {
 
   const handleOpenAddDialog = async () => {
   try {
-    const res = await fetch("http://localhost:3000/productos");
+    const res = await fetchWithRefresh("http://localhost:3000/productos");
     if (!res.ok) throw new Error("No se pudo cargar la lista de productos");
     const productosDB = await res.json();
 
@@ -136,7 +138,7 @@ export default function Productos() {
 
 const handleAddProduct = async (product) => {
   try {
-    const res = await fetch(`http://localhost:3000/inventario/addProduct/${idUsuario}`, {
+    const res = await fetchWithRefresh(`http://localhost:3000/inventario/addProduct/${idUsuario}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id_product: product.id_product, stock: 0, unit_price: product.price })
@@ -156,7 +158,7 @@ const handleAddProduct = async (product) => {
 
 const handleRemoveProduct = async (id_product) => {
   try {
-    const res = await fetch(`http://localhost:3000/inventario/removeProduct/${idUsuario}`, {
+    const res = await fetchWithRefresh(`http://localhost:3000/inventario/removeProduct/${idUsuario}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id_product })

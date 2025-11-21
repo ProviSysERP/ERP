@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { fetchWithRefresh } from "./fetchWithRefresh";
+import { useNavigate } from "react-router-dom";
 
 export function useAuth() {
-  const [user, setUser] = useState(null);
+  const [idUser, setIdUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const verificarSesion = async () => {
@@ -11,13 +13,15 @@ export function useAuth() {
       try {
         const res = await fetchWithRefresh("http://localhost:3000/usuarios/me");
         if (!res.ok) {
+                console.log("❌ No se pudo verificar sesión, cerrando sesión");
           logout();
           return;
         }
         const data = await res.json();
-        setUser(data);
+            console.log("✅ Usuario obtenido:", data);
+        setIdUser(data.id_user);
       } catch (err) {
-        console.error("Error verificando sesión:", err);
+        console.error("💥 Error verificando sesión:", err);
         logout();
       } finally {
         setLoading(false);
@@ -29,7 +33,7 @@ export function useAuth() {
 
   const login = async (email, password) => {
     try {
-      const res = await fetch("http://localhost:3000/Login", {
+      const res = await fetch("http://localhost:3000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -41,12 +45,11 @@ export function useAuth() {
       const data = await res.json();
       localStorage.setItem("token", data.access_token);
 
-      // Llamada usando fetchWithRefresh para setear user
-      const me = await fetchWithRefresh("http://localhost:3000/usuarios/me");
-      if (me.ok) {
-        const usuario = await me.json();
-        setUser(usuario);
-      }
+      const meRes = await fetchWithRefresh("http://localhost:3000/usuarios/me");
+      if (!meRes.ok) return { ok: false, error: "Error al obtener usuario" };
+
+      const usuario = await meRes.json();
+      setIdUser(usuario.id_user);
 
       return { ok: true };
     } catch (err) {
@@ -57,8 +60,9 @@ export function useAuth() {
 
   const logout = () => {
     localStorage.removeItem("token");
-    setUser(null);
+    setIdUser(null);
+    navigate("/login");
   };
 
-  return { user, loading, login, logout };
+  return { idUser, loading, login, logout };
 }

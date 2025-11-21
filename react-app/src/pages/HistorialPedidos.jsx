@@ -39,6 +39,7 @@ import {
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Download, Search, PlusCircle, Trash2, Edit2, Moon, Sun } from "lucide-react";
 import jsPDF from "jspdf";
+import { fetchWithRefresh } from "../components/fetchWithRefresh";
 
 export default function HistorialPedidos() {
   // theme toggle
@@ -85,7 +86,7 @@ export default function HistorialPedidos() {
   async function fetchOrders() {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:3000/pedidos");
+      const res = await fetchWithRefresh("http://localhost:3000/pedidos");
       const data = await res.json();
       setOrders(data || []);
     } catch (err) {
@@ -120,7 +121,7 @@ export default function HistorialPedidos() {
   const handleDelete = async (id_delivery) => {
     if (!confirm("¿Eliminar pedido?")) return;
     try {
-      const res = await fetch(`http://localhost:3000/pedidos/${id_delivery}`, { method: "DELETE" });
+      const res = await fetchWithRefresh(`http://localhost:3000/pedidos/${id_delivery}`, { method: "DELETE" });
       if (res.status === 204 || res.ok) {
         setOrders((prev) => prev.filter((p) => p.id_delivery !== id_delivery));
         setSnack({ open: true, severity: "success", message: "Pedido eliminado" });
@@ -174,13 +175,13 @@ export default function HistorialPedidos() {
     try {
       if (isEditing) {
         // update by id_delivery
-        const res = await fetch(`http://localhost:3000/pedidos/${form.id_delivery}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const res = await fetchWithRefresh(`http://localhost:3000/pedidos/${form.id_delivery}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
         if (!res.ok) { const err = await res.json(); throw new Error(err.error || 'update failed'); }
         const updated = await res.json();
         setOrders(prev => prev.map(o => o.id_delivery === updated.id_delivery ? updated : o));
         setSnack({ open: true, severity: 'success', message: 'Pedido actualizado' });
       } else {
-        const res = await fetch('http://localhost:3000/pedidos', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const res = await fetchWithRefresh('http://localhost:3000/pedidos', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
         if (res.status !== 201 && !res.ok) { const err = await res.json(); throw new Error(err.error || 'create failed'); }
         const created = await res.json();
         // backend might return object with insertedId or full object

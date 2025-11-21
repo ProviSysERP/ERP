@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { Typography, Container, Box, CircularProgress, Alert, Button, CardMedia, CardContent, CardActions, Card, TextField } from '@mui/material';
 import Header from '../components/Header.jsx';
 import '../pages/Productos.css';
+import { fetchWithRefresh } from "../components/fetchWithRefresh";
+
 
 export default function Productos() {
   const [products, setProducts] = useState([]);
@@ -10,12 +12,13 @@ export default function Productos() {
   const [isLoading, setIsLoading] = useState(true);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
   const [busqueda, setBusqueda] = useState("");
+  
 
   useEffect(() => {
     console.log("Cargando productos...");
     setIsLoading(true);
 
-    fetch("http://localhost:3000/productos")
+    fetchWithRefresh("http://localhost:3000/productos")
       .then((response) => {
         console.log("Response:", response);
         if (!response.ok) {

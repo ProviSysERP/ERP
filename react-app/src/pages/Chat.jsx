@@ -21,6 +21,8 @@ import {
 import SendIcon from '@mui/icons-material/Send';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { fetchWithRefresh } from "../components/fetchWithRefresh";
+
 
 export default function ChatApp() {
   const [isLoading, setIsLoading] = useState(true);
@@ -39,7 +41,7 @@ export default function ChatApp() {
 
   const loadChats = async (usID) => {
     try {
-      const response = await fetch(`http://localhost:3000/mensajes/${usID}`);
+      const response = await fetchWithRefresh(`http://localhost:3000/mensajes/${usID}`);
       if (!response.ok) {
         setChats([]);
         return;
@@ -65,7 +67,7 @@ export default function ChatApp() {
 
     // Create new chat
     try {
-      const res = await fetch('http://localhost:3000/mensajes', {
+      const res = await fetchWithRefresh('http://localhost:3000/mensajes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user1: iDusuario, user2: user.id_user }),
@@ -80,7 +82,7 @@ export default function ChatApp() {
 
   const deleteChat = async (chatId) => {
     try {
-      const response = await fetch(`http://localhost:3000/mensajes/${chatId}`, {
+      const response = await fetchWithRefresh(`http://localhost:3000/mensajes/${chatId}`, {
         method: 'DELETE',
       });
       if (!response.ok) throw new Error('Error al eliminar el chat');
@@ -96,7 +98,7 @@ export default function ChatApp() {
       const usuario = await obtenerUsuario();
       setIdUsuario(usuario.id_user);
       await loadChats(usuario.id_user);
-      const res = await fetch('http://localhost:3000/usuarios');
+      const res = await fetchWithRefresh('http://localhost:3000/usuarios');
       const users = await res.json();
       setAllUsers(users.filter(u => u.id_user !== usuario.id_user));
     };
@@ -108,7 +110,7 @@ export default function ChatApp() {
     chats.forEach((chat) => {
       const otherId = chat.user1 === iDusuario ? chat.user2 : chat.user1;
       if (!otherUsers[chat.id_conversation]) {
-        fetch(`http://localhost:3000/usuarios/${otherId}`)
+        fetchWithRefresh(`http://localhost:3000/usuarios/${otherId}`)
           .then((res) => res.json())
           .then((data) =>
             setOtherUsers((prev) => ({
@@ -134,7 +136,7 @@ export default function ChatApp() {
   };
 
   try {
-    const response = await fetch(
+    const response = await fetchWithRefresh(
       `http://localhost:3000/mensajes/newMessage/${selectedChat.id_conversation}`,
       {
         method: 'PUT',
