@@ -18,11 +18,15 @@ export default function Productos() {
   const [success, setSuccess] = useState(false);
   const [allProducts, setAllProducts] = useState([]);
   const [openAddDialog, setOpenAddDialog] = useState(false);
+  const [isProveedor, setIsProveedor] = useState(false);
+  const [openCreateProduct, setOpenCreateProduct] = useState(false);
+  const [openDeleteProviderProducts, setOpenDeleteProviderProducts] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
       const usuario = await obtenerUsuario();
       setIdUsuario(usuario.id_user);
+      setIsProveedor(usuario.provider);
     };
     fetchUser();
   }, []);
@@ -262,6 +266,27 @@ const handleRemoveProduct = async (id_product) => {
                 </List>
               )}
             </DialogContent>
+            {isProveedor && (
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 3 }}>
+
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => setOpenCreateProduct(true)}
+                >
+                  Crear nuevo producto
+                </Button>
+
+                <Button
+                  variant="outlined"
+                  color="error"
+                  onClick={() => setOpenDeleteProviderProducts(true)}
+                >
+                  Eliminar productos de mi empresa
+                </Button>
+
+              </Box>
+            )}
             <DialogActions>
               <Button onClick={() => setOpenAddDialog(false)}>Cerrar</Button>
             </DialogActions>

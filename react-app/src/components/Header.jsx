@@ -95,6 +95,9 @@ export default function PrimarySearchAppBar() {
     { label: 'Historial de Pedidos', path: '/historialpedidos' },
     { label: 'Proveedores', path: '/proveedores' },
     { label: 'Productos', path: '/productos' },
+    { label: 'Panel de Administrador', path: '/adminpanel' },
+    { label: 'Inventario', path: '/inventario' },
+
   ];
 
   const navigateTo = (path) => {
@@ -212,15 +215,6 @@ export default function PrimarySearchAppBar() {
         sx={{ width: '100%', top: 0, left: 0, right: 0 }}
       >
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
           <Typography
             variant="h6"
             noWrap
