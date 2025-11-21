@@ -252,7 +252,7 @@ export default function Perfil() {
       <Header />
 
       <Box sx={{ display: "flex", gap: 1, alignItems: "center", mb: 2 }}>
-        <Button component={Link} to="/contactos" variant="outlined">
+        <Button onClick={() => navigate(-1)} variant="outlined">
           ← Volver
         </Button>
 
