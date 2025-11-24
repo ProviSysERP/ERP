@@ -4,6 +4,7 @@ import {
   Button,
   Container,
   Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -12,73 +13,121 @@ import {
   TableRow,
   Typography,
   CircularProgress,
-  Stack
+  Alert,
+  MenuItem,
+  Select,
+  FormControl,
 } from "@mui/material";
-import { jsPDF } from "jspdf";
 import Header from "../components/Header.jsx";
-import { fetchWithRefresh } from "../components/fetchWithRefresh";
+import { obtenerUsuario } from "../components/ObtenerUsuario.js";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
-export default function HistorialPedidos() {
-  const [historial, setHistorial] = useState([]);
-  const [loading, setLoading] = useState(true);
+const HistorialPedidos = () => {
+  const [usuario, setUsuario] = useState(null);
+  const [pedidos, setPedidos] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    setLoading(true);
-    fetchWithRefresh("http://localhost:3000/pedidos")
-      .then((res) => {
-        if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
-        return res.json();
-      })
-      .then((data) => {
-        setHistorial(data);
-        setError(null);
-      })
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
+    const fetchPedidos = async () => {
+      setIsLoading(true);
+      try {
+        const user = await obtenerUsuario();
+        if (!user) {
+          setError("No se pudo obtener el usuario.");
+          setIsLoading(false);
+          return;
+        }
+        setUsuario(user);
+
+        const res = await fetch("http://localhost:3000/pedidos");
+        if (!res.ok) throw new Error("Error al cargar pedidos");
+
+        const data = await res.json();
+        const userPedidos = data.filter((p) => p.id_user === user.id_user);
+        setPedidos(userPedidos);
+      } catch (err) {
+        console.error(err);
+        setError(err.message || "Error al cargar pedidos");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPedidos();
   }, []);
 
-  const handleDownloadPDF = () => {
+  // Función para descargar PDF
+  const descargarPDF = () => {
+    if (!pedidos || pedidos.length === 0) {
+      alert("No hay pedidos para descargar.");
+      return;
+    }
+
     const doc = new jsPDF();
-    doc.setFontSize(16);
+    doc.setFontSize(14);
     doc.text("Historial de Pedidos", 14, 20);
 
-    let y = 30;
-    historial.forEach((pedido, index) => {
-      doc.setFontSize(12);
-      doc.text(`Pedido #${pedido.id || index + 1}`, 14, y);
-      y += 6;
-      doc.text(`Proveedor: ${pedido.id_provider || "N/D"}`, 14, y);
-      y += 6;
-      doc.text(`Usuario: ${pedido.user_name || "N/D"}`, 14, y);
-      y += 6;
-      doc.text(`Total: ${pedido.total_price?.toFixed(2) || 0} €`, 14, y);
-      y += 6;
-      doc.text("Productos:", 14, y);
-      y += 6;
-      pedido.products.forEach((prod) => {
-        doc.text(
-          ` - ${prod.product_name} x ${prod.quantity} (${prod.unit_price?.toFixed(2) || 0} €/ud)`,
-          18,
-          y
-        );
-        y += 6;
-      });
-      y += 4;
-      if (y > 270) {
-        doc.addPage();
-        y = 20;
-      }
+    // Crear tabla
+    const tableData = pedidos.map((pedido) => [
+      pedido.provider_name,
+      pedido.products.map((p) => p.product_name).join(", "),
+      pedido.total_price.toFixed(2) + " €",
+      pedido.status,
+    ]);
+
+    doc.autoTable({
+      head: [["Proveedor", "Productos", "Total", "Estado"]],
+      body: tableData,
+      startY: 30,
+      styles: { fontSize: 10 },
+      headStyles: { fillColor: [25, 118, 210], textColor: 255 },
     });
 
     doc.save("historial_pedidos.pdf");
   };
 
-  if (loading) {
+  // Eliminar pedido
+  const handleEliminarPedido = async (pedidoId) => {
+    if (!window.confirm("¿Deseas eliminar este pedido?")) return;
+    try {
+      const res = await fetch(`http://localhost:3000/pedidos/${pedidoId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Error eliminando pedido");
+      setPedidos((prev) => prev.filter((p) => p._id !== pedidoId));
+    } catch (err) {
+      console.error(err);
+      alert("No se pudo eliminar el pedido");
+    }
+  };
+
+  // Cambiar estado del pedido
+  const handleCambioEstado = async (pedidoId, nuevoEstado) => {
+    try {
+      const res = await fetch(`http://localhost:3000/pedidos/${pedidoId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: nuevoEstado }),
+      });
+      if (!res.ok) throw new Error("Error actualizando estado");
+      setPedidos((prev) =>
+        prev.map((p) =>
+          p._id === pedidoId ? { ...p, status: nuevoEstado } : p
+        )
+      );
+    } catch (err) {
+      console.error(err);
+      alert("No se pudo actualizar el estado");
+    }
+  };
+
+  if (isLoading) {
     return (
       <Container>
         <Header />
-        <Box sx={{ p: 3, textAlign: "center" }}>
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
           <CircularProgress />
         </Box>
       </Container>
@@ -89,8 +138,8 @@ export default function HistorialPedidos() {
     return (
       <Container>
         <Header />
-        <Box sx={{ p: 3 }}>
-          <Typography color="error">Error: {error}</Typography>
+        <Box sx={{ mt: 4 }}>
+          <Alert severity="error">{error}</Alert>
         </Box>
       </Container>
     );
@@ -99,61 +148,84 @@ export default function HistorialPedidos() {
   return (
     <Container>
       <Header />
-
-      {/* Cabecera con recuadro */}
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          backgroundColor: "#1976d2", // color de cabecera, azul MUI
-          color: "white",
-          px: 3,
-          py: 2,
-          borderRadius: 1,
-          mt: 3,
+          mt: 2,
           mb: 2,
+          p: 2,
+          backgroundColor: "#1976d2",
+          borderRadius: 1,
+          color: "#fff",
         }}
       >
-        <Typography variant="h5">Historial de Pedidos</Typography>
-        <Button variant="contained" onClick={handleDownloadPDF}>
-          Descargar PDF
-        </Button>
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <Typography variant="h6">Historial de pedidos</Typography>
+          <Button variant="contained" onClick={descargarPDF}>
+            Descargar PDF
+          </Button>
+        </Stack>
       </Box>
 
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID Pedido</TableCell>
-              <TableCell>Proveedor</TableCell>
-              <TableCell>Usuario</TableCell>
-              <TableCell>Total (€)</TableCell>
-              <TableCell>Productos</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {historial.map((pedido, index) => (
-              <TableRow key={pedido.id || index}>
-                <TableCell>{pedido.id || index + 1}</TableCell>
-                <TableCell>{pedido.id_provider || "N/D"}</TableCell>
-                <TableCell>{pedido.user_name || "N/D"}</TableCell>
-                <TableCell>{pedido.total_price?.toFixed(2) || 0}</TableCell>
-                <TableCell>
-                  {pedido.products
-                    .map(
-                      (prod) =>
-                        `${prod.product_name} x${prod.quantity} (${prod.unit_price?.toFixed(
-                          2
-                        )} €/ud)`
-                    )
-                    .join(", ")}
-                </TableCell>
+      <Paper>
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Proveedor</TableCell>
+                <TableCell>Productos</TableCell>
+                <TableCell>Total</TableCell>
+                <TableCell>Estado</TableCell>
+                <TableCell>Acciones</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {pedidos.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} align="center">
+                    No hay pedidos realizados
+                  </TableCell>
+                </TableRow>
+              ) : (
+                pedidos.map((pedido) => (
+                  <TableRow key={pedido._id}>
+                    <TableCell>{pedido.provider_name}</TableCell>
+                    <TableCell>
+                      {pedido.products.map((prod) => prod.product_name).join(", ")}
+                    </TableCell>
+                    <TableCell>{pedido.total_price.toFixed(2)} €</TableCell>
+                    <TableCell>
+                      <FormControl fullWidth>
+                        <Select
+                          value={pedido.status}
+                          onChange={(e) =>
+                            handleCambioEstado(pedido._id, e.target.value)
+                          }
+                        >
+                          <MenuItem value="Pendiente">Pendiente</MenuItem>
+                          <MenuItem value="En tránsito">En tránsito</MenuItem>
+                          <MenuItem value="Entregado">Entregado</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        color="error"
+                        variant="outlined"
+                        size="small"
+                        onClick={() => handleEliminarPedido(pedido._id)}
+                      >
+                        Eliminar
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
     </Container>
   );
-}
+};
+
+export default HistorialPedidos;

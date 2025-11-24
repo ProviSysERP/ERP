@@ -14,6 +14,8 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import { fetchWithRefresh } from "../components/fetchWithRefresh";
+import { obtenerUsuario } from "../components/ObtenerUsuario.js";
+
 
 
 function createDataFromProduct(p) {
@@ -211,52 +213,54 @@ export default function Pedidos() {
 
   const handleClearCart = () => setCart([]);
 
-  const handlePlaceOrder = () => {
-    const orderProducts = cart.map((it) => ({
-      id_product: it.product.id,
-      name: it.product.name,
-      quantity: it.qty,
-      unit_price: it.product.price,
-    }));
+  const handlePlaceOrder = async () => {
+  const user = await obtenerUsuario(); // obtener usuario logeado
+  if (!user) {
+    setSnack({ open: true, message: "No se pudo obtener el usuario", severity: "error" });
+    return;
+  }
 
-    const payload = {
-      id_provider: cart.length ? cart[0].product.provider : null,
-      id_user: 1, // Tendria que venir del usuario logeado pero no se con certeza si lo he conseguido
-      products: orderProducts,
-      total_price: Math.round(cartTotal * 100) / 100,
-      address: {
-            address: address || "",
-            street: street || "",
-            city: city || "",
-            state: stateRegion || "",
-            postalCode: postalCode || "",
-            country: country || "",
-      },
-      status: "Pendiente",
-      createdAt: new Date().toISOString(),
-    };
+  const orderProducts = cart.map((it) => ({
+    id_product: it.product.id,
+    product_name: it.product.name, // renombrar para historial
+    quantity: it.qty,
+    unit_price: it.product.price,
+  }));
 
-  
-    fetchWithRefresh("http://localhost:3000/pedidos", {
+  const payload = {
+    id_provider: cart.length ? cart[0].product.provider : null,
+    id_user: user.id_user, // <- aquí va el usuario real
+    products: orderProducts,
+    total_price: Math.round(cartTotal * 100) / 100,
+    address: {
+      address: address || "",
+      street: street || "",
+      city: city || "",
+      state: stateRegion || "",
+      postalCode: postalCode || "",
+      country: country || "",
+    },
+    status: "Pendiente",
+    createdAt: new Date().toISOString(),
+  };
+
+  try {
+    const res = await fetchWithRefresh("http://localhost:3000/pedidos", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error(`Error al crear pedido: ${res.status}`);
-        return res.json();
-      })
-      .then((data) => {
-        setSnack({ open: true, message: "Pedido creado correctamente", severity: "success" });
-        setCart([]);
-        setConfirmOpen(false);
-        setCartOpen(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setSnack({ open: true, message: "Error al crear pedido", severity: "error" });
-      });
-  };
+    });
+    if (!res.ok) throw new Error(`Error al crear pedido: ${res.status}`);
+    await res.json();
+    setSnack({ open: true, message: "Pedido creado correctamente", severity: "success" });
+    setCart([]);
+    setConfirmOpen(false);
+    setCartOpen(false);
+  } catch (err) {
+    console.error(err);
+    setSnack({ open: true, message: "Error al crear pedido", severity: "error" });
+  }
+};
 
   if (isLoading) {
     return (
