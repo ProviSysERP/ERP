@@ -3,21 +3,13 @@ import {
   Box,
   Container,
   Card,
-  CardContent,
   TextField,
   Typography,
   Button,
   Alert,
-  Checkbox,
-  FormControlLabel,
   CircularProgress,
-  Grid,
-  Divider,
-  Paper,
-  InputAdornment
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { Mail, Lock, Phone, MapPin, User, ImageIcon } from "lucide-react";
 
 export default function Registro() {
   const navigate = useNavigate();

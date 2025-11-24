@@ -3,7 +3,6 @@ import Header from '../components/Header.jsx';
 import { obtenerUsuario } from '../components/ObtenerUsuario.js';
 import {
   Container,
-  CircularProgress,
   List,
   ListItem,
   ListItemAvatar,

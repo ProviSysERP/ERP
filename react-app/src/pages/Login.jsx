@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -7,11 +7,8 @@ import {
   TextField,
   Typography,
   Card,
-  CardContent,
   Alert,
   CircularProgress,
-  InputAdornment,
-  Paper,
 } from "@mui/material";
 import { Mail, Lock } from "lucide-react";
 import { useAuthContext } from "../components/authContext";
