@@ -120,7 +120,7 @@ export default function AboutUs() {
                       <ListItemIcon>
                         <RestaurantMenuIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Hecho para hostelería" secondary="Funciones pensadas para el sector de la hostelería" />
+                      <ListItemText primary="Hecho para hostelería" secondary="Funciones pensadas para el sector de la hostelería." />
                     </ListItem>
 
                     <ListItem>
