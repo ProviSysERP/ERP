@@ -183,11 +183,21 @@ const handleCreateProduct = async (product) => {
     return;
   }
 
+  const provider = await fetchWithRefresh(`http://localhost:3000/proveedores/porUser/${idUsuario}`)
+  const cacharro = await provider.json();
+
+  const idProvider = cacharro.id_provider
+
+  const productToSend = {
+      ...product,
+      id_provider: idProvider,
+    };
+
   try {
     const res = await fetch('http://localhost:3000/productos', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(product)
+      body: JSON.stringify(productToSend)
     });
 
     if (!res.ok) throw new Error('No se pudo crear el producto');
