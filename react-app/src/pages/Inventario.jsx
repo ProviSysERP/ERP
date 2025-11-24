@@ -38,7 +38,7 @@ export default function Productos() {
       setIsLoading(true);
 
       try {
-        const invRes = await fetchWithRefresh(`http://localhost:3000/inventario/${idUsuario}`);
+        const invRes = await fetchWithRefresh(`http://localhost:3000/inventario/porProveedor/${idUsuario}`);
 
         if (invRes.status === 404) {
           const createRes = await fetchWithRefresh(`http://localhost:3000/inventario/create/${idUsuario}`, {
@@ -54,6 +54,8 @@ export default function Productos() {
         if (!invRes.ok) throw new Error("Error al cargar inventario");
 
         const inventario = await invRes.json();
+
+        console.log(inventario);
 
         const productPromises = inventario.products.map(async (item) => {
           const prodRes = await fetchWithRefresh(`http://localhost:3000/productos/${item.id_product}`);
