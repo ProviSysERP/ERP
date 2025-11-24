@@ -348,7 +348,7 @@ export default function ChatApp() {
     <Button sx={{
         position: 'fixed',
         bottom: 80,
-        right: 10,
+        right: 5.5,
         outlineWidth: "10px",
     }} 
     variant="outlined" startIcon={<DeleteIcon />} onClick={() => {
@@ -356,7 +356,7 @@ export default function ChatApp() {
         if (confirmed) deleteChat(selectedChat.id_conversation);
     }}
     >
-        Borrar Chat</Button>
+      Borrar Chat</Button>
 
       <Button
           startIcon={<AddIcon />}
