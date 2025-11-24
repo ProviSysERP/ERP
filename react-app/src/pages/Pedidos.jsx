@@ -533,6 +533,6 @@ export default function Pedidos() {
           {snack.message}
         </Alert>
       </Snackbar>
-    </Container>
+    </Container>  
   );
 }
