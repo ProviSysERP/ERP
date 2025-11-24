@@ -6,6 +6,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
 import CloseIcon from "@mui/icons-material/Close";
 import Header from "../components/Header.jsx";
+import { fetchWithRefresh } from "../components/fetchWithRefresh";
+
 
 export default function Perfil() {
   const { id } = useParams();
@@ -36,7 +38,7 @@ export default function Perfil() {
 
   const pullProviders = async (userId) => {
     try {
-      const res = await fetch(`http://localhost:3000/proveedores/porUser/${userId}`);
+      const res = await fetchWithRefresh(`http://localhost:3000/proveedores/porUser/${userId}`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (err) {
@@ -47,7 +49,7 @@ export default function Perfil() {
 
   useEffect(() => {
     setIsLoading(true);
-    fetch(`http://localhost:3000/usuarios/${id}`)
+    fetchWithRefresh(`http://localhost:3000/usuarios/${id}`)
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();
@@ -145,7 +147,7 @@ export default function Perfil() {
 
     const doRequest = async (url, method) => {
       try {
-        const res = await fetch(url, {
+        const res = await fetchWithRefresh(url, {
           method,
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
@@ -213,7 +215,7 @@ export default function Perfil() {
 
   const handleDeleteConfirm = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/usuarios/${id}`, { method: "DELETE" });
+      const res = await fetchWithRefresh(`http://localhost:3000/usuarios/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       setSnack({ open: true, message: "Usuario eliminado.", severity: "success" });
       setDeleteOpen(false);
@@ -250,7 +252,7 @@ export default function Perfil() {
       <Header />
 
       <Box sx={{ display: "flex", gap: 1, alignItems: "center", mb: 2 }}>
-        <Button component={Link} to="/contactos" variant="outlined">
+        <Button onClick={() => navigate(-1)} variant="outlined">
           ← Volver
         </Button>
 

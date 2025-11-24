@@ -17,6 +17,8 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Header from "../components/Header.jsx";
+import { fetchWithRefresh } from "../components/fetchWithRefresh";
+
 
 export default function Producto() {
   const { id } = useParams();
@@ -51,7 +53,7 @@ export default function Producto() {
   // Función para traer proveedor (simulada)
   const pullProviders = async (provId) => {
     try {
-      const response = await fetch(`${BASE_URL}/proveedores/porProducto/${provId}`);
+      const response = await fetchWithRefresh(`${BASE_URL}/proveedores/porProducto/${provId}`);
       if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
       return await response.json();
     } catch (err) {
@@ -64,7 +66,7 @@ export default function Producto() {
     setIsLoading(true);
     setError(null);
 
-    fetch(`${BASE_URL}/productos/${id}`)
+    fetchWithRefresh(`${BASE_URL}/productos/${id}`)
       .then(res => {
         if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
         return res.json();

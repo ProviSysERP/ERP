@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { Typography, Container, Box, CircularProgress, Alert, Button, CardMedia, CardContent, CardActions, Card } from '@mui/material';
 import Header from '../components/Header.jsx'
+import { fetchWithRefresh } from "../components/fetchWithRefresh";
 
 export default function Novedades() {
   const [users, setUsers] = useState([]);
@@ -12,7 +13,7 @@ export default function Novedades() {
     console.log("Cargando usuarios...");
     setIsLoading(true);
 
-    fetch("http://localhost:3000/usuarios")
+    fetchWithRefresh("http://localhost:3000/usuarios")
       .then((response) => {
         console.log("Response:", response);
         if (!response.ok) {

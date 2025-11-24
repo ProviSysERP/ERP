@@ -13,6 +13,8 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
+import { fetchWithRefresh } from "../components/fetchWithRefresh";
+
 
 function createDataFromProduct(p) {
   return {
@@ -148,7 +150,7 @@ export default function Pedidos() {
   const [country, setCountry] = useState(""); 
   useEffect(() => {
     setIsLoading(true);
-    fetch("http://localhost:3000/productos")
+    fetchWithRefresh("http://localhost:3000/productos")
       .then((res) => {
         if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
         return res.json();
@@ -235,7 +237,7 @@ export default function Pedidos() {
     };
 
   
-    fetch("http://localhost:3000/pedidos", {
+    fetchWithRefresh("http://localhost:3000/pedidos", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
