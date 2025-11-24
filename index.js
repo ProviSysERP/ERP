@@ -68,9 +68,15 @@ const createWindow = () => {
           },
         },
         {
-          label: 'Usuarios',
+          label: 'Tutoriales',
           click: () => {
-            win.loadURL('http://localhost:5173/proveedores');
+            win.loadURL('http://localhost:5173/tutorialpage');
+          },
+        },
+        {
+          label: 'How-Tos',
+          click: () => {
+            win.loadURL('http://localhost:5173/howtos');
           },
         },
         { type: 'separator' },
