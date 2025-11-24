@@ -22,6 +22,7 @@ import Chat from './pages/Chat.jsx'
 import { AuthProvider } from "./components/authContext.jsx"
 import AdminPage from './pages/AdminPage.jsx'
 import AboutUs from './pages/AboutUs.jsx'
+import TutorialPage from './pages/TutorialPage.jsx'
 
 function App() {
   return (
@@ -167,6 +168,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Header />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tutorialpage"
+            element={
+              <ProtectedRoute>
+                <TutorialPage />
               </ProtectedRoute>
             }
           />
