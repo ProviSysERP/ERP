@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
-import { FormControl, InputLabel, Select, MenuItem, Typography, Container, Box, CircularProgress, Alert, Button, CardMedia, CardContent, CardActions, Card, TextField, Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemText, ListItemAvatar, Avatar, Paper } from '@mui/material';
+import { Checkbox, Typography, Container, Box, CircularProgress, Alert, Button, CardMedia, CardContent, CardActions, Card, TextField, Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemText, ListItemAvatar, Avatar, Paper } from '@mui/material';
 import Header from '../components/Header.jsx';
 import '../pages/Productos.css';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { obtenerUsuario } from "../components/ObtenerUsuario.js";
 import { fetchWithRefresh } from "../components/fetchWithRefresh";
 
@@ -23,7 +24,7 @@ export default function Productos() {
   const [openDeleteProviderProducts, setOpenDeleteProviderProducts] = useState(false);
   const [newProduct, setNewProduct] = useState({});
   const [selectedProducts, setSelectedProducts] = useState([]);
-  const [deleteDialogProviderId, setDeleteDialogProviderId] = useState(null);
+  const [deleteDialogProviderId, setDeleteDialogProviderId] = useState();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -35,8 +36,9 @@ export default function Productos() {
       setIsProveedor(userWithData.provider);
       const providerRes = await fetchWithRefresh(`http://localhost:3000/proveedores/porUser/${userWithData.id_user}`);
       const providerData = await providerRes.json();
-      setDeleteDialogProviderId(providerData.id_provider);
-      console.log(deleteDialogProviderId)    };
+      const idpr = providerData.id_provider;
+      setDeleteDialogProviderId(idpr);    
+    };
     fetchUser();
   }, []);
 
@@ -218,15 +220,14 @@ const handleCreateProduct = async (product) => {
   }
 };
 
-const handleDeleteSelectedProducts = async () => {
+const handleDeleteProduct = async (id) => {
   try {
-    for (const id of selectedProducts) {
       const res = await fetchWithRefresh(
         `http://localhost:3000/productos/${id}`,
         { method: "DELETE" }
       );
       if (!res.ok) throw new Error(`No se pudo eliminar el producto ${id}`);
-    }
+
 
     setProducts(prev => prev.filter(p => !selectedProducts.includes(p.id_product)));
     setSelectedProducts([]);
@@ -342,7 +343,10 @@ const handleDeleteSelectedProducts = async () => {
                 <Button
                   variant="outlined"
                   color="error"
-                  onClick={() => setOpenDeleteProviderProducts(true)}
+                  onClick={() => {
+                    setOpenDeleteProviderProducts(true);
+                    console.log(deleteDialogProviderId);
+                  }}
                 >
                   Borrar productos de mi empresa
                 </Button>
@@ -419,8 +423,14 @@ const handleDeleteSelectedProducts = async () => {
               </Box>
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => setOpenCreateProduct(false)}>Cancelar</Button>
-              <Button variant="contained" color="success" onClick={() => handleCreateProduct(newProduct)}>
+              <Button onClick={() => { 
+                setOpenCreateProduct(false);
+              }}>
+                Cancelar</Button>
+              <Button variant="contained" color="success" onClick={() => {
+                handleCreateProduct(newProduct)
+                setOpenAddDialog(false);
+              }}>
                 Crear producto
               </Button>
             </DialogActions>
@@ -431,44 +441,37 @@ const handleDeleteSelectedProducts = async () => {
             onClose={() => setOpenDeleteProviderProducts(false)}
             fullWidth
             maxWidth="sm"
-            sx={{zIndex: 999999999999999}}
+            sx = {{zIndex:1000001}}
           >
             <DialogTitle>Eliminar productos de mi empresa</DialogTitle>
             <DialogContent>
-              <Typography sx={{ mb: 2 }}>
-                Selecciona los productos que deseas eliminar:
-              </Typography>
-
               <List>
-                {products
+                {allProducts
                   .filter(p => p.id_provider === deleteDialogProviderId)
                   .map((product) => (
                     <ListItem
                       key={product.id_product}
-                      button
-                      onClick={() => toggleSelectProduct(product.id_product)}
+                      secondaryAction={
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          endIcon= {<DeleteForeverIcon/>}
+                          onClick={() => {
+                            handleDeleteProduct(product.id_product)
+                            setOpenDeleteProviderProducts(false);
+                            setOpenAddDialog(false);
+                          }}
+                        >
+                        </Button>
+                      }
                     >
                       <ListItemText primary={product.name} />
-                      <Checkbox
-                        edge="end"
-                        checked={selectedProducts.includes(product.id_product)}
-                        tabIndex={-1}
-                        disableRipple
-                      />
                     </ListItem>
                   ))}
               </List>
             </DialogContent>
-            <DialogActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <DialogActions>
               <Button onClick={() => setOpenDeleteProviderProducts(false)}>Cerrar</Button>
-              <Button
-                variant="contained"
-                color="error"
-                onClick={handleDeleteSelectedProducts}
-                disabled={selectedProducts.length === 0}
-              >
-                Eliminar seleccionados
-              </Button>
             </DialogActions>
           </Dialog>
 
