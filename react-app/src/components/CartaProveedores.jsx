@@ -102,7 +102,7 @@ export default function CartaProveedores() {
           {proveedores.map((prov) => {
             const key = prov.id_provider ?? prov.id ?? prov._id ?? prov.image ?? prov.name ?? Math.random();
             const img = resolveImage(prov.image ?? prov.profile_picture);
-            const title = prov.name ?? prov.title ?? "Proveedor";
+            const title = prov.companyName ?? prov.title ?? "Proveedor";
 
             return (
               <ImageListItem
