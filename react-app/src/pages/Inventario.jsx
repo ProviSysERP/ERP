@@ -33,7 +33,10 @@ export default function Productos() {
       const userWithData = await response.json();
       console.log(userWithData.provider);
       setIsProveedor(userWithData.provider);
-    };
+      const providerRes = await fetchWithRefresh(`http://localhost:3000/proveedores/porUser/${userWithData.id_user}`);
+      const providerData = await providerRes.json();
+      setDeleteDialogProviderId(providerData.id_provider);
+      console.log(deleteDialogProviderId)    };
     fetchUser();
   }, []);
 
@@ -90,6 +93,7 @@ export default function Productos() {
 
     loadInventory();
   }, [idUsuario]);
+
 
   const saveStock = async (id_product, newStock) => {
     setUpdatingStock((prev) => ({ ...prev, [id_product]: true }));
@@ -427,6 +431,7 @@ const handleDeleteSelectedProducts = async () => {
             onClose={() => setOpenDeleteProviderProducts(false)}
             fullWidth
             maxWidth="sm"
+            sx={{zIndex: 999999999999999}}
           >
             <DialogTitle>Eliminar productos de mi empresa</DialogTitle>
             <DialogContent>
@@ -436,7 +441,7 @@ const handleDeleteSelectedProducts = async () => {
 
               <List>
                 {products
-                  .filter(p => p.id_provider === idProvider)
+                  .filter(p => p.id_provider === deleteDialogProviderId)
                   .map((product) => (
                     <ListItem
                       key={product.id_product}
