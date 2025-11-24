@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
-import { Typography, Container, Box, CircularProgress, Alert, Button, CardMedia, CardContent, CardActions, Card, TextField, Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemText, ListItemAvatar, Avatar, Paper } from '@mui/material';
+import { FormControl, InputLabel, Select, MenuItem, Typography, Container, Box, CircularProgress, Alert, Button, CardMedia, CardContent, CardActions, Card, TextField, Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemText, ListItemAvatar, Avatar, Paper } from '@mui/material';
 import Header from '../components/Header.jsx';
 import '../pages/Productos.css';
 import { obtenerUsuario } from "../components/ObtenerUsuario.js";
@@ -21,6 +21,9 @@ export default function Productos() {
   const [isProveedor, setIsProveedor] = useState(false);
   const [openCreateProduct, setOpenCreateProduct] = useState(false);
   const [openDeleteProviderProducts, setOpenDeleteProviderProducts] = useState(false);
+  const [newProduct, setNewProduct] = useState({});
+  const [selectedProducts, setSelectedProducts] = useState([]);
+  const [deleteDialogProviderId, setDeleteDialogProviderId] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -30,7 +33,10 @@ export default function Productos() {
       const userWithData = await response.json();
       console.log(userWithData.provider);
       setIsProveedor(userWithData.provider);
-    };
+      const providerRes = await fetchWithRefresh(`http://localhost:3000/proveedores/porUser/${userWithData.id_user}`);
+      const providerData = await providerRes.json();
+      setDeleteDialogProviderId(providerData.id_provider);
+      console.log(deleteDialogProviderId)    };
     fetchUser();
   }, []);
 
@@ -87,6 +93,7 @@ export default function Productos() {
 
     loadInventory();
   }, [idUsuario]);
+
 
   const saveStock = async (id_product, newStock) => {
     setUpdatingStock((prev) => ({ ...prev, [id_product]: true }));
@@ -176,6 +183,61 @@ const handleRemoveProduct = async (id_product) => {
   }
 };
 
+const handleCreateProduct = async (product) => {
+  if (!product.category) {
+    alert("Por favor selecciona una categoría");
+    return;
+  }
+
+  const provider = await fetchWithRefresh(`http://localhost:3000/proveedores/porUser/${idUsuario}`)
+  const cacharro = await provider.json();
+
+  const idProvider = cacharro.id_provider
+
+  const productToSend = {
+      ...product,
+      id_provider: idProvider,
+    };
+
+  try {
+    const res = await fetch('http://localhost:3000/productos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(productToSend)
+    });
+
+    if (!res.ok) throw new Error('No se pudo crear el producto');
+    const created = await res.json();
+    console.log('Producto creado:', created);
+    setOpenCreateProduct(false);
+    setSuccess(true);
+    setTimeout(() => setSuccess(false), 2000);
+
+  } catch (err) {
+    setError(err.message);
+  }
+};
+
+const handleDeleteSelectedProducts = async () => {
+  try {
+    for (const id of selectedProducts) {
+      const res = await fetchWithRefresh(
+        `http://localhost:3000/productos/${id}`,
+        { method: "DELETE" }
+      );
+      if (!res.ok) throw new Error(`No se pudo eliminar el producto ${id}`);
+    }
+
+    setProducts(prev => prev.filter(p => !selectedProducts.includes(p.id_product)));
+    setSelectedProducts([]);
+    setOpenDeleteProviderProducts(false);
+    setSuccess(true);
+    setTimeout(() => setSuccess(false), 2000);
+  } catch (err) {
+    setError(err.message);
+  }
+};
+
   if (isLoading) {
     return (
       <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 8 }}>
@@ -240,7 +302,7 @@ const handleRemoveProduct = async (id_product) => {
             <Button variant="contained" color="secondary" onClick={handleOpenAddDialog} sx={{ position: "fixed", right:30, top:120, zIndex:9999 }}>
               Añadir productos
             </Button>
-          <Dialog open={openAddDialog} onClose={() => setOpenAddDialog(false)} fullWidth maxWidth="sm">
+          <Dialog open={openAddDialog} onClose={() => setOpenAddDialog(false)} fullWidth maxWidth="sm" sx={{zIndex:1000000}}>
             <DialogTitle>Productos disponibles para añadir</DialogTitle>
             <DialogContent>
               {allProducts.length === 0 ? (
@@ -264,12 +326,15 @@ const handleRemoveProduct = async (id_product) => {
               )}
             </DialogContent>
             {isProveedor && (
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 3 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 3, alignSelf: "center", maxWidth: 500 }}>
 
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => setOpenCreateProduct(true)}
+                  onClick={() => {
+                    setNewProduct({ category: '' });
+                    setOpenCreateProduct(true);
+                  }}
                 >
                   Crear nuevo producto
                 </Button>
@@ -279,7 +344,7 @@ const handleRemoveProduct = async (id_product) => {
                   color="error"
                   onClick={() => setOpenDeleteProviderProducts(true)}
                 >
-                  Eliminar productos de mi empresa
+                  Borrar productos de mi empresa
                 </Button>
 
               </Box>
@@ -288,6 +353,125 @@ const handleRemoveProduct = async (id_product) => {
               <Button onClick={() => setOpenAddDialog(false)}>Cerrar</Button>
             </DialogActions>
           </Dialog>
+
+          <Dialog open={openCreateProduct} onClose={() => setOpenCreateProduct(false)} fullWidth maxWidth="sm" sx={{zIndex:1000001}}>
+            <DialogTitle>Crear nuevo producto</DialogTitle>
+            <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+
+              <TextField
+                fullWidth
+                label="Nombre del producto"
+                value={newProduct.name || ''}
+                onChange={(e) => setNewProduct(prev => ({ ...prev, name: e.target.value }))}
+              />
+
+              <TextField
+                fullWidth
+                label="Descripción"
+                multiline
+                rows={3}
+                value={newProduct.description || ''}
+                onChange={(e) => setNewProduct(prev => ({ ...prev, description: e.target.value }))}
+              />
+
+              <Box sx={{ display: 'flex', gap: 2, mt: 1, ml:13 }}>
+                {["Alimentos", "Bebidas", "Otros"].map((cat) => (
+                  <Button
+                    key={cat}
+                    variant={newProduct.category === cat.toLowerCase() ? "contained" : "outlined"}
+                    onClick={() => setNewProduct(prev => ({ ...prev, category: cat.toLowerCase() }))}
+                  >
+                    {cat}
+                  </Button>
+                ))}
+              </Box>
+
+              <TextField
+                fullWidth
+                label="Precio"
+                type="number"
+                value={newProduct.price || ''}
+                onChange={(e) => setNewProduct(prev => ({ ...prev, price: parseFloat(e.target.value) }))}
+              />
+
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                {(newProduct.images || []).map((img, idx) => (
+                  <TextField
+                    key={idx}
+                    fullWidth
+                    label={`URL de la imagen ${idx + 1}`}
+                    value={img}
+                    onChange={(e) => {
+                      const updatedImages = [...(newProduct.images || [])];
+                      updatedImages[idx] = e.target.value;
+                      setNewProduct(prev => ({ ...prev, images: updatedImages }));
+                    }}
+                  />
+                ))}
+                <Button
+                  variant="outlined"
+                  onClick={() =>
+                    setNewProduct(prev => ({ ...prev, images: [...(prev.images || []), ''] }))
+                  }
+                >
+                  Agregar imagen
+                </Button>
+              </Box>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setOpenCreateProduct(false)}>Cancelar</Button>
+              <Button variant="contained" color="success" onClick={() => handleCreateProduct(newProduct)}>
+                Crear producto
+              </Button>
+            </DialogActions>
+          </Dialog>
+
+          <Dialog
+            open={openDeleteProviderProducts}
+            onClose={() => setOpenDeleteProviderProducts(false)}
+            fullWidth
+            maxWidth="sm"
+            sx={{zIndex: 999999999999999}}
+          >
+            <DialogTitle>Eliminar productos de mi empresa</DialogTitle>
+            <DialogContent>
+              <Typography sx={{ mb: 2 }}>
+                Selecciona los productos que deseas eliminar:
+              </Typography>
+
+              <List>
+                {products
+                  .filter(p => p.id_provider === deleteDialogProviderId)
+                  .map((product) => (
+                    <ListItem
+                      key={product.id_product}
+                      button
+                      onClick={() => toggleSelectProduct(product.id_product)}
+                    >
+                      <ListItemText primary={product.name} />
+                      <Checkbox
+                        edge="end"
+                        checked={selectedProducts.includes(product.id_product)}
+                        tabIndex={-1}
+                        disableRipple
+                      />
+                    </ListItem>
+                  ))}
+              </List>
+            </DialogContent>
+            <DialogActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Button onClick={() => setOpenDeleteProviderProducts(false)}>Cerrar</Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleDeleteSelectedProducts}
+                disabled={selectedProducts.length === 0}
+              >
+                Eliminar seleccionados
+              </Button>
+            </DialogActions>
+          </Dialog>
+
 
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: 'repeat(3, 1fr)' }, gap: 3 }}>
             {productosFiltrados.length > 0 ? (
