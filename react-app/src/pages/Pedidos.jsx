@@ -485,6 +485,11 @@ export default function Pedidos() {
                 />
               </Grid>
             </Grid>
+            <Grid>
+              <TextxFile>
+                  
+              </TextxFile>
+            </Grid>
 
             <TextField
               label="Notas (opcional)"
