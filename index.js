@@ -110,7 +110,7 @@ const createWindow = () => {
     {
       label: 'Edit',
       submenu: [
-        { label: 'About Us', click: () => console.log('About Us clicked') },
+        { label: 'About Us', click: () => win.loadFile('aboutus.html'), },
       ],
     },
   ];
