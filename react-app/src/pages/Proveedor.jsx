@@ -5,7 +5,6 @@ import { Container, Typography, Card, CardMedia, Button, CircularProgress, Alert
 import Header from '../components/Header.jsx'
 import { fetchWithRefresh } from "../components/fetchWithRefresh";
 
-
 export default function Proveedor() {
   const { id } = useParams();
   const [proveedor, setProveedor] = useState(null);
@@ -15,12 +14,12 @@ export default function Proveedor() {
   const [openProductos, setOpenProductos] = useState(false);
   const [products, setProducts] = useState([]);
   const [userId, setUserId] = useState(null);
-  const [userName, setUserName] = useState(null); // nombre del usuario logueado
+  const [userName, setUserName] = useState(null);
   const [nuevoComentario, setNuevoComentario] = useState("");
   const [nuevaPuntuacion, setNuevaPuntuacion] = useState(0);
   const [loadingPost, setLoadingPost] = useState(false);
 
-  // Mapa para traducir días de semana a español
+  //traducir días de semana a español
   const diasSemana = {
     Mon: "Lunes",
     Tue: "Martes",
@@ -31,6 +30,7 @@ export default function Proveedor() {
     Sun: "Domingo"
   };
 
+  //apartado de reseñas, enviarlas, elimiarlas y obtener el usuario
   useEffect(() => {
     fetchWithRefresh("http://localhost:3000/usuarios/me", {
       headers: {
