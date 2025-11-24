@@ -22,6 +22,8 @@ export default function Productos() {
   const [openCreateProduct, setOpenCreateProduct] = useState(false);
   const [openDeleteProviderProducts, setOpenDeleteProviderProducts] = useState(false);
   const [newProduct, setNewProduct] = useState({});
+  const [selectedProducts, setSelectedProducts] = useState([]);
+  const [deleteDialogProviderId, setDeleteDialogProviderId] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -207,6 +209,26 @@ const handleCreateProduct = async (product) => {
     setSuccess(true);
     setTimeout(() => setSuccess(false), 2000);
 
+  } catch (err) {
+    setError(err.message);
+  }
+};
+
+const handleDeleteSelectedProducts = async () => {
+  try {
+    for (const id of selectedProducts) {
+      const res = await fetchWithRefresh(
+        `http://localhost:3000/productos/${id}`,
+        { method: "DELETE" }
+      );
+      if (!res.ok) throw new Error(`No se pudo eliminar el producto ${id}`);
+    }
+
+    setProducts(prev => prev.filter(p => !selectedProducts.includes(p.id_product)));
+    setSelectedProducts([]);
+    setOpenDeleteProviderProducts(false);
+    setSuccess(true);
+    setTimeout(() => setSuccess(false), 2000);
   } catch (err) {
     setError(err.message);
   }
@@ -399,6 +421,52 @@ const handleCreateProduct = async (product) => {
               </Button>
             </DialogActions>
           </Dialog>
+
+          <Dialog
+            open={openDeleteProviderProducts}
+            onClose={() => setOpenDeleteProviderProducts(false)}
+            fullWidth
+            maxWidth="sm"
+          >
+            <DialogTitle>Eliminar productos de mi empresa</DialogTitle>
+            <DialogContent>
+              <Typography sx={{ mb: 2 }}>
+                Selecciona los productos que deseas eliminar:
+              </Typography>
+
+              <List>
+                {products
+                  .filter(p => p.id_provider === idProvider)
+                  .map((product) => (
+                    <ListItem
+                      key={product.id_product}
+                      button
+                      onClick={() => toggleSelectProduct(product.id_product)}
+                    >
+                      <ListItemText primary={product.name} />
+                      <Checkbox
+                        edge="end"
+                        checked={selectedProducts.includes(product.id_product)}
+                        tabIndex={-1}
+                        disableRipple
+                      />
+                    </ListItem>
+                  ))}
+              </List>
+            </DialogContent>
+            <DialogActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Button onClick={() => setOpenDeleteProviderProducts(false)}>Cerrar</Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleDeleteSelectedProducts}
+                disabled={selectedProducts.length === 0}
+              >
+                Eliminar seleccionados
+              </Button>
+            </DialogActions>
+          </Dialog>
+
 
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: 'repeat(3, 1fr)' }, gap: 3 }}>
             {productosFiltrados.length > 0 ? (
