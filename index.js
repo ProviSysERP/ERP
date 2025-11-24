@@ -80,7 +80,7 @@ const createWindow = () => {
     {
       label: 'Edit',
       submenu: [
-        { label: 'About Us', click: () => console.log('About Us clicked') },
+        { label: 'About Us', click: () => win.loadURL('http://localhost:5173/aboutus'), },
       ],
     },
   ];
@@ -94,7 +94,7 @@ const createWindow = () => {
         {
           label: 'Menu',
           click: () => {
-            win.loadFile('menu.html');
+            win.loadFile('http://localhost:5173/proveedores');
           },
         },
         {
@@ -110,7 +110,7 @@ const createWindow = () => {
     {
       label: 'Edit',
       submenu: [
-        { label: 'About Us', click: () => win.loadFile('aboutus.html'), },
+        { label: 'About Us', click: () => win.loadFile('http://localhost:5173/aboutus'), },
       ],
     },
   ];
