@@ -26,7 +26,10 @@ export default function Productos() {
     const fetchUser = async () => {
       const usuario = await obtenerUsuario();
       setIdUsuario(usuario.id_user);
-      setIsProveedor(usuario.provider);
+      const response = await fetchWithRefresh(`http://localhost:3000/usuarios/${usuario.id_user}`);
+      const userWithData = await response.json();
+      console.log(userWithData.provider);
+      setIsProveedor(userWithData.provider);
     };
     fetchUser();
   }, []);
@@ -40,7 +43,11 @@ export default function Productos() {
       try {
         const invRes = await fetchWithRefresh(`http://localhost:3000/inventario/porProveedor/${idUsuario}`);
 
-        if (invRes.status === 404) {
+        if (!invRes.ok) throw new Error("Error al cargar inventario");
+
+        const inventario = await invRes.json();
+
+        if (inventario === null) {
           const createRes = await fetchWithRefresh(`http://localhost:3000/inventario/create/${idUsuario}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" }
@@ -50,10 +57,6 @@ export default function Productos() {
           setError(null);
           return;
         }
-
-        if (!invRes.ok) throw new Error("Error al cargar inventario");
-
-        const inventario = await invRes.json();
 
         console.log(inventario);
 
@@ -84,14 +87,6 @@ export default function Productos() {
 
     loadInventory();
   }, [idUsuario]);
-
-  const handleStockChange = (id_product, value) => {
-    setProducts((prev) =>
-      prev.map((p) =>
-        p.id_product === id_product ? { ...p, stock: Number(value) } : p
-      )
-    );
-  };
 
   const saveStock = async (id_product, newStock) => {
     setUpdatingStock((prev) => ({ ...prev, [id_product]: true }));
