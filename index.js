@@ -78,7 +78,7 @@ const createWindow = () => {
       ],
     },
     {
-      label: 'Edit',
+      label: 'About',
       submenu: [
         { label: 'About Us', click: () => win.loadURL('http://localhost:5173/aboutus'), },
       ],
@@ -108,7 +108,7 @@ const createWindow = () => {
       ],
     },
     {
-      label: 'Edit',
+      label: 'About',
       submenu: [
         { label: 'About Us', click: () => win.loadFile('http://localhost:5173/aboutus'), },
       ],

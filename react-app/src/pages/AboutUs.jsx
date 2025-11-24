@@ -112,7 +112,7 @@ export default function AboutUs() {
 
                   <Typography variant="body2" paragraph>
                     Lo diseñamos para que sea claro: vistas sencillas, acciones rápidas y datos que
-                    realmente te ayudan a tomar decisiones.
+                    realmente te ayudan a tomar decisiones para crecer como empresa.
                   </Typography>
 
                   <List disablePadding>
@@ -120,14 +120,14 @@ export default function AboutUs() {
                       <ListItemIcon>
                         <RestaurantMenuIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Hecho para hostelería" secondary="Funciones pensadas en cocina y sala" />
+                      <ListItemText primary="Hecho para hostelería" secondary="Funciones pensadas para el sector de la hostelería" />
                     </ListItem>
 
                     <ListItem>
                       <ListItemIcon>
                         <SyncAltIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Comunicación empresa ↔ proveedor" secondary="Pedidos claros y seguimiento simple" />
+                      <ListItemText primary="Comunicación empresa ↔ proveedor" secondary="Sistema de chat para mantener la comunicación y apartado interactivo para pedidos..." />
                     </ListItem>
                   </List>
                 </CardContent>
