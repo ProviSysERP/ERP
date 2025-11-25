@@ -54,6 +54,25 @@ const createWindow = () => {
             win.loadURL('http://localhost:5173/pedidos');
           },
         },
+        {
+          label: 'Panel de administrador',
+          click: () => {
+            win.loadURL('http://localhost:5173/admin');
+          },
+        },
+        {
+          label: 'Historial de Pedidos',
+          click: () => {
+            win.loadURL('http://localhost:5173/historialpedidos');
+          },
+        },
+        {
+          label: 'Chat',
+          click: () => {
+            win.loadURL('http://localhost:5173/chat');
+          },
+        },
+
         { type: 'separator' },
         { role: 'quit', label: 'Salir' },
       ],
