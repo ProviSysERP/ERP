@@ -8,14 +8,9 @@ import Typography from '@mui/material/Typography';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import MoreIcon from '@mui/icons-material/MoreVert';
-import CssBaseline from '@mui/material/CssBaseline';
-import Container from '@mui/material/Container';
+import MoreIcon from '@mui/icons-material/MoreVert'
 import LocalGroceryStoreTwoToneIcon from '@mui/icons-material/LocalGroceryStoreTwoTone';
 import { obtenerUsuario } from './ObtenerUsuario';
 import Autocomplete from '@mui/material/Autocomplete';

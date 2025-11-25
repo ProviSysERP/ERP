@@ -54,6 +54,25 @@ const createWindow = () => {
             win.loadURL('http://localhost:5173/pedidos');
           },
         },
+        {
+          label: 'Panel de administrador',
+          click: () => {
+            win.loadURL('http://localhost:5173/admin');
+          },
+        },
+        {
+          label: 'Historial de Pedidos',
+          click: () => {
+            win.loadURL('http://localhost:5173/historialpedidos');
+          },
+        },
+        {
+          label: 'Chat',
+          click: () => {
+            win.loadURL('http://localhost:5173/chat');
+          },
+        },
+
         { type: 'separator' },
         { role: 'quit', label: 'Salir' },
       ],
@@ -64,13 +83,25 @@ const createWindow = () => {
         {
           label: 'Documentación Memoria',
           click: () => {
-            win.loadURL('http://localhost:5173/home');
+            win.loadURL('http://localhost:5173/Informefinal');
           },
         },
         {
-          label: 'Usuarios',
+          label: 'Tutoriales',
           click: () => {
-            win.loadURL('http://localhost:5173/proveedores');
+            win.loadURL('http://localhost:5173/tutorialpage');
+          },
+        },
+        {
+          label: 'How-Tos',
+          click: () => {
+            win.loadURL('http://localhost:5173/howtos');
+          },
+        },
+        {
+          label: 'Documentación de Sistemas Informáticos',
+          click: () => {
+            win.loadURL('http://localhost:5173/sistemas');
           },
         },
         { type: 'separator' },

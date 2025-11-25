@@ -1,6 +1,5 @@
-import React from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { Container, Box, Typography, Card, CardContent, Grid, Avatar, Button, Divider, List, ListItem, ListItemIcon, ListItemText,
+import { Container, Box, Typography, Card, CardContent, Grid, Divider, List, ListItem, ListItemIcon, ListItemText,
 } from "@mui/material";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";

@@ -23,6 +23,9 @@ import { AuthProvider } from "./components/authContext.jsx"
 import AdminPage from './pages/AdminPage.jsx'
 import AboutUs from './pages/AboutUs.jsx'
 import TutorialPage from './pages/TutorialPage.jsx'
+import HowTos from './pages/HowTos.jsx'
+import Informefinal from './pages/Informefinal.jsx'
+import SistemasInformaticos from './pages/SistemasInformaticos.jsx'
 
 function App() {
   return (
@@ -88,6 +91,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <AdminPage />
+              </ProtectedRoute>
+            }
+          />
+                    <Route
+            path="/informefinal"
+            element={
+              <ProtectedRoute>
+                <Informefinal />
               </ProtectedRoute>
             }
           />
@@ -176,6 +187,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <TutorialPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/howtos"
+            element={
+              <ProtectedRoute>
+                <HowTos />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/sistemas"
+            element={
+              <ProtectedRoute>
+                <SistemasInformaticos />
               </ProtectedRoute>
             }
           />

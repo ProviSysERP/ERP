@@ -1,4 +1,3 @@
-import React from 'react';
 import { Container, Typography, Box, Divider, Paper } from '@mui/material';
 
 // Imágenes Tutorial 1
