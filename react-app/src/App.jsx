@@ -24,6 +24,7 @@ import AdminPage from './pages/AdminPage.jsx'
 import AboutUs from './pages/AboutUs.jsx'
 import TutorialPage from './pages/TutorialPage.jsx'
 import HowTos from './pages/HowTos.jsx'
+import Informefinal from './pages/Informefinal.jsx'
 
 function App() {
   return (
@@ -89,6 +90,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <AdminPage />
+              </ProtectedRoute>
+            }
+          />
+                    <Route
+            path="/informefinal"
+            element={
+              <ProtectedRoute>
+                <Informefinal />
               </ProtectedRoute>
             }
           />

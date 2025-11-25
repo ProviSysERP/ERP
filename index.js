@@ -64,7 +64,7 @@ const createWindow = () => {
         {
           label: 'Documentación Memoria',
           click: () => {
-            win.loadURL('http://localhost:5173/home');
+            win.loadURL('http://localhost:5173/Informefinal');
           },
         },
         {
