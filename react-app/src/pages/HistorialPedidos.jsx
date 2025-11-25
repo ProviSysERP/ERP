@@ -21,7 +21,8 @@ import {
 import Header from "../components/Header.jsx";
 import { obtenerUsuario } from "../components/ObtenerUsuario.js";
 import jsPDF from "jspdf";
-import "jspdf-autotable";
+import autoTable from "jspdf-autotable";
+
 
 const HistorialPedidos = () => {
   const [usuario, setUsuario] = useState(null);
@@ -60,34 +61,31 @@ const HistorialPedidos = () => {
 
   // Función para descargar PDF
   const descargarPDF = () => {
-    if (!pedidos || pedidos.length === 0) {
-      alert("No hay pedidos para descargar.");
-      return;
-    }
+  if (!pedidos || pedidos.length === 0) {
+    alert("No hay pedidos para descargar.");
+    return;
+  }
 
-    const doc = new jsPDF();
-    doc.setFontSize(14);
-    doc.text("Historial de Pedidos", 14, 20);
+  const doc = new jsPDF();
 
-    // Crear tabla
-    const tableData = pedidos.map((pedido) => [
-      pedido.provider_name,
-      pedido.products.map((p) => p.product_name).join(", "),
-      pedido.total_price.toFixed(2) + " €",
-      pedido.status,
-    ]);
+  doc.setFontSize(14);
+  doc.text("Historial de Pedidos", 14, 20);
 
-    doc.autoTable({
-      head: [["Proveedor", "Productos", "Total", "Estado"]],
-      body: tableData,
-      startY: 30,
-      styles: { fontSize: 10 },
-      headStyles: { fillColor: [25, 118, 210], textColor: 255 },
-    });
+  const tableData = pedidos.map(pedido => [
+    pedido.provider_name || "",
+    pedido.products?.map(p => p.product_name).join(", ") || "",
+    (pedido.total_price?.toFixed(2) || "0.00") + " €",
+    pedido.status || "",
+  ]);
 
-    doc.save("historial_pedidos.pdf");
-  };
+  autoTable(doc, {
+    head: [["Proveedor", "Productos", "Total", "Estado"]],
+    body: tableData,
+    startY: 30,
+  });
 
+  doc.save("historial_pedidos.pdf");
+};
   // Eliminar pedido
   const handleEliminarPedido = async (pedidoId) => {
     if (!window.confirm("¿Deseas eliminar este pedido?")) return;
