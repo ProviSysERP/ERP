@@ -98,6 +98,12 @@ const createWindow = () => {
             win.loadURL('http://localhost:5173/howtos');
           },
         },
+        {
+          label: 'Documentación de Sistemas Informáticos',
+          click: () => {
+            win.loadURL('http://localhost:5173/sistemas');
+          },
+        },
         { type: 'separator' },
         { role: 'quit', label: 'Salir' },
       ],
