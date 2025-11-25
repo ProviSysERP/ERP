@@ -5,12 +5,13 @@ import Header from '../components/Header.jsx'
 import { Typography, Box, Alert, Button, Card, CardContent, CardMedia, Chip, TextField, Container } from "@mui/material";
 import { fetchWithRefresh } from "../components/fetchWithRefresh";
 
-
+//página de catálogo de proveedores
 export default function Proveedores() {
   const [proveedores, setProveedores] = useState([]);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
   const [busqueda, setBusqueda] = useState("");
-
+  
+  //cargar proveedores desde la API
   useEffect(() => {
     fetchWithRefresh("http://localhost:3000/proveedores")
       .then((res) => res.json())
@@ -18,6 +19,7 @@ export default function Proveedores() {
       .catch((err) => console.error("Error cargando proveedores:", err));
   }, []);
 
+  //filtrar proveedores según búsqueda y categoría
   const proveedoresFiltrados = proveedores.filter((p) => {
     const coincideBusqueda = p.companyName.toLowerCase().includes(busqueda.toLowerCase());
     const coincideCategoria =
@@ -42,7 +44,8 @@ export default function Proveedores() {
             onChange={(e) => setBusqueda(e.target.value)}
             sx={{ mb: 3 }}
           />
-
+          
+          {/*categorías*/}
           <Typography variant="h6" sx={{ mb: 1 }}>
             Categorías
           </Typography>
@@ -67,7 +70,8 @@ export default function Proveedores() {
           <Typography variant="h4" sx={{ mb: 4, fontWeight: "bold", textAlign: "center" }}>
             Catálogo de Proveedores
           </Typography>
-
+          
+          {/*tarjetas de proveedores*/}
           <Box sx={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 3 }}>
             {proveedoresFiltrados.length > 0 ? (
               proveedoresFiltrados.map((p) => (

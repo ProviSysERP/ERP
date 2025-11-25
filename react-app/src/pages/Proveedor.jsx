@@ -30,7 +30,8 @@ export default function Proveedor() {
     Sun: "Domingo"
   };
 
-  //apartado de reseñas, enviarlas, elimiarlas y obtener el usuario
+//apartado de reseñas, enviarlas, elimiarlas y obtener el usuario
+  //obtener usuario actual
   useEffect(() => {
     fetchWithRefresh("http://localhost:3000/usuarios/me", {
       headers: {
@@ -47,6 +48,7 @@ export default function Proveedor() {
       .catch(() => setUserId(null));
   }, []);
 
+  //obtener datos del proveedor
   useEffect(() => {
     setIsLoading(true);
     fetchWithRefresh(`http://localhost:3000/proveedores/${id}`)
@@ -69,6 +71,7 @@ export default function Proveedor() {
       .finally(() => setIsLoading(false));
   }, [id]);
 
+  //función para enviar reseña
   const enviarReseña = () => {
     if (!nuevoComentario || !nuevaPuntuacion || !userId) return;
 
@@ -98,6 +101,7 @@ export default function Proveedor() {
       .finally(() => setLoadingPost(false));
   };
 
+  //función para eliminar reseña
   const eliminarReseña = async (reviewUserId) => {
     try {
       const confirmacion = window.confirm("¿Deseas eliminar esta reseña?");
