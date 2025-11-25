@@ -32,7 +32,7 @@ export default function Perfil() {
     street: "",
     city: "",
     state: "",
-    postalCode: "",
+    postalcode: "",
     country: "",
   });
 
@@ -69,7 +69,7 @@ export default function Perfil() {
           street: data.address?.street || "",
           city: data.address?.city || "",
           state: data.address?.state || "",
-          postalCode: data.address?.postalCode || data.address?.postal_code || "",
+          postalcode: data.address?.postalcode || data.address?.postal_code || "",
           country: data.address?.country || "",
         }));
 
@@ -131,7 +131,7 @@ export default function Perfil() {
         street: form.street || "",
         city: form.city || "",
         state: form.state || "",
-        postalCode: form.postalCode || "",
+        postalcode: form.postalcode || "",
         country: form.country || "",
       },
     };
@@ -372,7 +372,7 @@ export default function Perfil() {
               </Grid>
 
               <Grid item xs={12} sm={6}>
-                <TextField label="Código postal" fullWidth value={form.postalCode} onChange={handleFormChange("postalCode")} />
+                <TextField label="Código postal" fullWidth value={form.postalcode} onChange={handleFormChange("postalcode")} />
               </Grid>
 
               <Grid item xs={12} sm={6}>
